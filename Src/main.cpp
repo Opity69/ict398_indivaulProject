@@ -1,15 +1,14 @@
 #include <iostream>
 
 #include <windows.h>
-#include <Glew/include/GL/glew.h>
-#include <Glfw/include/GLFW/glfw3.h>
+
+
 
 
 #include <iostream>
 #include <memory>
 
 #include <ccd/ccd.h>
-
 
 
 
