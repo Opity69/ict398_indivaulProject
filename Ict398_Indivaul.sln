@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Ict398_Indivaul", "Ict398_Indivaul.vcxproj", "{8EA6714F-3A8D-4615-9A74-E4AC5FA3D303}"
+	ProjectSection(ProjectDependencies) = postProject
+		{723C6A30-9A75-49D8-99DA-8337A902DFCF} = {723C6A30-9A75-49D8-99DA-8337A902DFCF}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libccd", "Thirdparty\libccd\libccd.vcxproj", "{723C6A30-9A75-49D8-99DA-8337A902DFCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +26,14 @@ Global
 		{8EA6714F-3A8D-4615-9A74-E4AC5FA3D303}.Release|x64.Build.0 = Release|x64
 		{8EA6714F-3A8D-4615-9A74-E4AC5FA3D303}.Release|x86.ActiveCfg = Release|Win32
 		{8EA6714F-3A8D-4615-9A74-E4AC5FA3D303}.Release|x86.Build.0 = Release|Win32
+		{723C6A30-9A75-49D8-99DA-8337A902DFCF}.Debug|x64.ActiveCfg = Debug|x64
+		{723C6A30-9A75-49D8-99DA-8337A902DFCF}.Debug|x64.Build.0 = Debug|x64
+		{723C6A30-9A75-49D8-99DA-8337A902DFCF}.Debug|x86.ActiveCfg = Debug|Win32
+		{723C6A30-9A75-49D8-99DA-8337A902DFCF}.Debug|x86.Build.0 = Debug|Win32
+		{723C6A30-9A75-49D8-99DA-8337A902DFCF}.Release|x64.ActiveCfg = Release|x64
+		{723C6A30-9A75-49D8-99DA-8337A902DFCF}.Release|x64.Build.0 = Release|x64
+		{723C6A30-9A75-49D8-99DA-8337A902DFCF}.Release|x86.ActiveCfg = Release|Win32
+		{723C6A30-9A75-49D8-99DA-8337A902DFCF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
