@@ -1,42 +1,61 @@
 #pragma once
 #include <glm3/glm/glm.hpp>
+#include <glm3/glm/gtx/norm.hpp>
+
+
+typedef glm::fvec3 Vector_t;
+typedef float Scalar_t;
 
 
 class VectorType
 {
-
 protected:
-	glm::fvec3 value_;
-
+	Vector_t value_;
 
 public:
-	void SetValue(const glm::fvec3& value )
+	void SetValue(const Vector_t& value)
 	{
-		value_ =value;
+		value_ = value;
 	}
 
-	glm::fvec3 Value() const
+	Vector_t Value() const
 	{
 		return value_;
 	}
 
-protected:
-	explicit  VectorType(glm::fvec3);
-	~VectorType()= default;
-};
+	Vector_t Direction()
+	{
+		return normalize(value_);
+	}
 
+	Scalar_t Lenght()
+	{
+		return glm::length(value_);
+	}
+
+
+protected:
+	 VectorType(const Vector_t& value): value_(value)
+	{
+	};
+
+	VectorType(Scalar_t x, Scalar_t y, Scalar_t z): value_(x, y, z)
+	{
+	};
+	~VectorType() = default;
+};
 
 
 class ScalarType
 {
-	protected:
-	float value_;
+protected:
+	Scalar_t value_;
 
 
 public:
-	void SetValue(float value )
+	void SetValue(Scalar_t value)
 	{
-		value_ =value;
+		value_ = value;
 	}
 
 	float GetValue() const
@@ -45,46 +64,197 @@ public:
 	}
 
 protected:
-	explicit  ScalarType(float value);
-	~ScalarType()= default;
+	explicit ScalarType(Scalar_t value);
+	~ScalarType() = default;
+};
+
+class Mass : public ScalarType
+{
+};
+
+
+class InteriaTensor
+{
+	
+};
+
+struct LinearSpeed : public ScalarType
+{
+	LinearSpeed(Scalar_t speed): ScalarType(speed)
+	{
+	};
+};
+
+struct AngularSpeed : public ScalarType
+{
+	AngularSpeed(Scalar_t speed): ScalarType(speed)
+	{
+	};
+};
+
+
+struct DeltaTime : public ScalarType
+{
+	explicit DeltaTime(Scalar_t dt)
+		: ScalarType(dt)
+	{
+	}
+};
+
+
+class Postion
+{
+	Vector_t pos_;
+
+
+public:
+	explicit Postion(Scalar_t x ,Scalar_t y, Scalar_t z): pos_(x,y,z)
+	{
+	}
+
+	Vector_t getDisplacementVector()
+	{
+		return pos_;
+	}
 };
 
 
 class Velocity : public VectorType
 {
-
 protected:
-	explicit Velocity(const glm::fvec3& vec): VectorType(vec)
+	explicit Velocity(const Vector_t& vec): VectorType(vec)
 	{
-		
 	}
+
 	~Velocity() = default;
-	
+
+
+public:
 };
 
 class Accelleration : public VectorType
 {
-
 protected:
-	explicit Accelleration(const glm::fvec3& vec): VectorType(vec)
+	explicit Accelleration(Scalar_t x, Scalar_t y, Scalar_t z): VectorType(x, y, z)
+	{
+	}
+
+	~Accelleration() = default;
+};
+
+
+class LinearVelocity : public Velocity
+{
+public:
+	LinearVelocity(Scalar_t x, Scalar_t y, Scalar_t z): Velocity({x, y, z})
+	{
+	}
+
+	LinearSpeed ToSpeed()
+	{
+		return LinearSpeed(glm::length(value_));
+	}
+
+	Vector_t ToDirection()
+	{
+		return Direction();
+	}
+};
+
+class AngualrVelocity : public Velocity
+{
+	AngualrVelocity(Scalar_t x, Scalar_t y, Scalar_t z): Velocity({x, y, z})
+	{
+	}
+
+	AngularSpeed ToSpeed()
+	{
+		return AngularSpeed(glm::length(value_));
+	}
+
+	Vector_t Axis()
+	{
+		return Direction();
+	}
+};
+
+class LinearAcceleration : public Accelleration
+{
+public:
+	LinearAcceleration(): Accelleration(0, 0, 0)
+	{
+	}
+
+
+	LinearAcceleration(Scalar_t x, Scalar_t y, Scalar_t z): Accelleration(x, y, z)
+	{
+	}
+};
+
+class AngualrAcceleratiom : public Accelleration
+{
+};
+
+class Force : VectorType
+{
+
+public:
+	Force():VectorType(0,0,0)
 	{
 		
 	}
-	~Accelleration() = default;
-	
+
+	Force(const LinearAcceleration& acceleration, const Mass& mass): VectorType(acceleration.Value()* mass.GetValue())
+	{
+	}
 };
 
-
-class LinearVelocity : public  Velocity
+class Toruge : VectorType
 {
 
+
+public:
+	Toruge():VectorType(0,0,0){};
+	Scalar_t Strength() const
+	{
+		return glm::length(value_);
+	}
+	Vector_t Axis()
+	{
+		return Direction();
+	}
 	
 };
 
-class AngualrVelocity : public  Velocity
+
+class PointForce: public  VectorType
 {
 
+
+	PointForce(const Postion& pos, const Vector_t& force);
+	Postion pointOfAppliaction  {0,0,0};
+
+
+	Scalar_t Strenght()
+	{
+		return  Lenght();
+	}
+
+	Vector_t ToDirection()
+	{
+		return  Direction();
+	}
+
+	
+	Toruge getToruge(int a ,int b)
+	{
+		return  {};
+	}
+
+	Force getForce(const Mass& mass)
+	{
+		return  {};
+	}
+
 	
 };
-
-
