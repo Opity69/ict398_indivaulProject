@@ -19,11 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\CollisionPair.cpp" />
+    <ClCompile Include="Src\Collison.cpp" />
     <ClCompile Include="Src\CollisonSubSystem.cpp" />
     <ClCompile Include="Src\main.cpp" />
+    <ClCompile Include="Src\VissualObject.cpp" />
+    <ClCompile Include="Src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\CollisionPair.hpp" />
+    <ClInclude Include="Include\Collison.hpp" />
     <ClInclude Include="Include\CollisonSubSystem.h" />
+    <ClInclude Include="Include\VissualObject.hpp" />
+    <ClInclude Include="Include\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Thirdparty\libccd\libccd.vcxproj">
