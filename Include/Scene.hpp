@@ -25,7 +25,7 @@ public:
 
 	void SetCurrentCammera(uint64_t id);
 
-	void register_VissualObject(std::shared_ptr<IVissualObject>& vsObject);;
+	void register_VissualObject(std::shared_ptr<IVissualObject> vsObject);;
 	void unregister_VissualObject(uint64_t id
 	);;
 

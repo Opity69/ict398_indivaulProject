@@ -20,15 +20,14 @@ bool Window::ShouldClose()
 
 void Window::Draw()
 {
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	int w = 1,h = 1;
-	if(win_ptr)
+	int w = 1, h = 1;
+	if (win_ptr)
 	{
-		glfwGetFramebufferSize(win_ptr,&w,&h);
+		glfwGetFramebufferSize(win_ptr, &w, &h);
 	}
-	glViewport(0,0,w,h);
+	glViewport(0, 0, w, h);
 	if (!SceneToDraw.expired())
 	{
 		auto ptr = SceneToDraw.lock();
@@ -38,7 +37,7 @@ void Window::Draw()
 		}
 	}
 
-	if(win_ptr)
+	if (win_ptr)
 	{
 		glfwSwapBuffers(win_ptr);
 	}
@@ -46,8 +45,21 @@ void Window::Draw()
 
 void Window::SetSceneToDraw(const std::shared_ptr<Scene>& scene)
 {
-	this->SceneToDraw =scene;
+	this->SceneToDraw = scene;
 }
+
+glm::uvec2 Window::GetFsize()
+{
+	int x = 0;
+	int y = 0;
+	if (win_ptr)
+	{
+		glfwGetFramebufferSize(win_ptr, &x, &y);
+	}
+	return {x,y};
+}
+
+
 
 
 GLFWwindow* VissaulEngine::sharewin = nullptr;

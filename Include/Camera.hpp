@@ -10,6 +10,14 @@ public:
 	Camera(const Transform& trans, float near, float far, float fov, float aspect);
 
 
+	[[nodiscard]] float get_near() const;
+	void set_near(const float near);
+	[[nodiscard]] float get_far() const;
+	void set_far(const float far);
+	[[nodiscard]] float get_fov() const;
+	void set_fov(const float fov);
+	[[nodiscard]] float get_aspect() const;
+	void set_aspect(const float aspect);
 private:
 	UUID id;
 
@@ -23,6 +31,10 @@ private:
 	mutable bool matrix_valid = false;
 
 
+	void InvalidMatrix()
+	{
+		matrix_valid = false;
+	}
 	void ReCompute();
 
 public:

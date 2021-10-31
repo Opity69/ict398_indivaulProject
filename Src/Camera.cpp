@@ -1,5 +1,6 @@
 #include "Camera.hpp"
 #include <glm3/glm/gtc/type_ptr.hpp>
+
 Camera::Camera(const Transform& trans, float near, float far, float fov, float aspect): TransFormable(trans),
 	near(near),
 	far(far),
@@ -8,14 +9,75 @@ Camera::Camera(const Transform& trans, float near, float far, float fov, float a
 {
 }
 
+float Camera::get_near() const
+{
+	return near;
+	
+}
+
+void Camera::set_near(const float near)
+{
+	
+	this->near = near;
+	InvalidMatrix();
+}
+
+float Camera::get_far() const
+{
+	return far;
+}
+
+void Camera::set_far(const float far)
+{
+	this->far = far;
+	InvalidMatrix();
+}
+
+float Camera::get_fov() const
+{
+	return fov;
+}
+
+void Camera::set_fov(const float fov)
+{
+	this->fov = fov;
+}
+
+float Camera::get_aspect() const
+{
+	return aspect;
+}
+
+void Camera::set_aspect(const float aspect)
+{
+
+	
+	this->aspect = aspect;
+
+	if(aspect < 0.01 | isfinite(aspect))
+	{
+		this->aspect =1;
+	}
+	
+	InvalidMatrix();
+}
+
 void Camera::ReCompute()
 {
-	if (!matrix_valid)
+	if (!matrix_valid || !isTransMatrixCacheValid())
 	{
+		if(aspect < 0.01)
+		{
+			aspect =1;
+		}
 		glm::fmat4 pro = glm::perspective<float>(fov, aspect, near, far);
 
-		glm::fmat4 view = glm::lookAt(this->get_translation(), this->get_translation() + this->localForward(),
-		                              this->localUP());
+		auto forward = this->localForward();
+		auto eye = this->get_translation();
+		auto up = this->localUP();
+
+		glm::fmat4 view = glm::lookAt(eye, eye + forward, up);                          
+		
 
 		ViewProjectionMatrix_Cache = pro * view;
 	}

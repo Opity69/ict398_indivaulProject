@@ -3,14 +3,15 @@
 #include<glm3/glm/glm.hpp>
 #include <glm3/glm/gtc/quaternion.hpp>
 #include <glm3/glm/gtc/type_ptr.hpp>
+#include <glm3/glm/gtx/quaternion.hpp>
 
 class Transform
 {
 private:
 
-	glm::fvec3 translation_;
-	glm::fvec3 scale_;
-	glm::fquat rotation_;
+	glm::fvec3 translation_  ={0,0,0}; 
+	glm::fvec3 scale_ = {1,1,1};
+	glm::fquat rotation_={1,0,0,0};
 
 
 	
@@ -43,7 +44,8 @@ public:
 
 	void Rotate(glm::fquat rotation)
 	{
-		this->rotation_ =  rotation * rotation_; //TODO() check this is  correct
+		this->rotation_ =  rotation * rotation_; //
+		rotation_ = normalize(rotation_);
 		InvalidMatrix();
 	}
 
@@ -52,6 +54,12 @@ private:
 	mutable bool ValidMatrix = false;
 
 public:
+	Transform(const glm::fvec3& trans ,const glm::fvec3& scale, const glm::fquat& rotation):translation_(trans),scale_(scale),rotation_(rotation)
+	{
+		
+	}
+	Transform(){};
+	
 	void InvalidMatrix() const
 	{
 		ValidMatrix = false;
@@ -102,7 +110,7 @@ private:
 protected:
 	TransFormable(const Transform& trans);
 	TransFormable():transform_(){}
-	~TransFormable();
+	~TransFormable(){};
 public:
 
 	glm::fvec3 get_translation() const;
@@ -155,24 +163,32 @@ public:
 	glm::fvec3 localForward()
 	{
 		auto rot_mat = glm::mat4_cast(transform_.get_rotation());
-		glm::fvec4 v = {TransFormable::getWorldForward(),1};
-		return  v * rot_mat;
+		glm::fvec4 v = {TransFormable::getWorldForward(),0};
+		v =v*rot_mat;
+		glm::fvec3 out ={ v.x,v.y,v.z};
+		return  normalize(out);
 		
 	}
 
 	glm::fvec3 localUP()
 	{
-		auto rot_mat = glm::mat4_cast(transform_.get_rotation());
-		glm::fvec4 v = {TransFormable::getWorldUp(),1};
-		return  v * rot_mat;
+	auto rot_mat = glm::mat4_cast(transform_.get_rotation());
+		glm::fvec4 v = {TransFormable::getWorldUp(),0};
+		v = v *rot_mat;
+		glm::fvec3 out = v;
+		return  normalize(out);
 		
 	}
 
 	glm::fvec3 localRight()
 	{
 		auto rot_mat = glm::mat4_cast(transform_.get_rotation());
-		glm::fvec4 v = {TransFormable::getWorldRight(),1};
-		return  v * rot_mat;
+		
+		glm::fvec4 v = {TransFormable::getWorldRight(),0};
+		v = v*rot_mat;
+		glm::fvec3 out = v;
+		return  normalize(out);
+		
 		
 	}
 	

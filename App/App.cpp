@@ -11,9 +11,12 @@ int main()
 
 	VissaulEngine vs;
 	auto scene = std::make_shared<Scene>();
-	auto camera = std::make_shared<Camera>(Transform{},0.001,100,90,1);
-
+	auto camera = std::make_shared<Camera>(Transform{{0,0,80},{},{1.0f,0.0f,0.0f,0.0f}},0.001,100,90,1);
+	auto sphere = std::make_shared<Shpere>(Transform{{0,0,0},{1,1,1},{1,0,0,0,}},glm::fvec4{1.0f,0.f,0.f,0.f},2);
 	scene->register_Camera(camera);
+	scene->SetCurrentCammera(camera->getID());
+	scene->register_VissualObject(sphere);
+	
 
 	auto win =  vs.makeWindow({100,100},"Test");
 	win->SetSceneToDraw(scene);
@@ -21,6 +24,10 @@ int main()
 	while (!win->ShouldClose() && vs.MainLoop())
 	{
 		win->Draw();
+		//camera->Translate({0,0,1});
+		//camera->Rotate(glm::angleAxis(0.1f, glm::fvec3(0.0f,1.0f,0.0f)));
+		auto size = win->GetFsize();
+		camera->set_aspect((float)size.x / (float) size.y);
 		
 	}
 	

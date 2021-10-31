@@ -14,6 +14,7 @@ glm::fvec3 Transform::get_translation() const
 void Transform::set_translation(const glm::fvec3& translation)
 {
 	translation_ = translation;
+	InvalidMatrix();
 }
 
 glm::fvec3 Transform::get_scale() const
@@ -30,7 +31,7 @@ void Transform::set_scale(const glm::fvec3& scale)
 glm::fquat Transform::get_rotation() const
 {
 	return rotation_;
-	InvalidMatrix();
+	
 }
 
 void Transform::set_rotation(const glm::fquat& rotation)
