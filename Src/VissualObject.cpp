@@ -5,13 +5,20 @@
 #include "gl/GLU.h"
 #include "glm3/glm/gtc/type_ptr.hpp"
 
-IVissualObject::IVissualObject(): drawList(glGenLists(1))
+IVissualObject::IVissualObject()
 {
+	drawList = glGenLists(1);
+}
+
+IVissualObject::~IVissualObject()
+{
+	glDeleteLists(drawList,1);
 }
 
 IVissualObject::IVissualObject(const Transform& transform, const glm::fvec4& color): transform_(transform),
-	color_(color), drawList(glGenLists(1))
+	color_(color)
 {
+	drawList = glGenLists(1);
 }
 
 
@@ -87,6 +94,7 @@ void Box::Rebuild()
 	glNewList(drawList,GL_COMPILE);
 	
 	glBegin(GL_QUADS);
+	glColor4fv(glm::value_ptr(color_));
 	glVertex3f(1.0f, 1.0f, -1.0f);
 	glVertex3f(-1.0f, 1.0f, -1.0f);
 	glVertex3f(-1.0f, 1.0f, 1.0f);

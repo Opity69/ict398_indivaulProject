@@ -72,12 +72,13 @@ public:
 	}
 	void RecomputeMatrix() const
 	{
-		glm::fmat4 t = glm::translate({},translation_)	;
-		glm::fmat4 s = glm::scale({},scale_);
+		glm::fmat4 id{1.0f};
+		glm::fmat4 t = glm::translate(id,translation_)	;
+		glm::fmat4 s = glm::scale(id,scale_);
 		glm::fmat4 r = glm::mat4_cast(rotation_);
 		
-		MatrixCache = t * s*r;
-		//ValidMatrix = true;
+		MatrixCache = t*s*r ;
+		ValidMatrix = true;
 	}
 
 

@@ -12,10 +12,14 @@ int main()
 	VissaulEngine vs;
 	auto scene = std::make_shared<Scene>();
 	auto camera = std::make_shared<Camera>(Transform{{0,0,80},{},{1.0f,0.0f,0.0f,0.0f}},0.001,100,90,1);
-	auto sphere = std::make_shared<Shpere>(Transform{{0,0,0},{1,1,1},{1,0,0,0,}},glm::fvec4{1.0f,0.f,0.f,0.f},2);
+	auto sphere = std::make_shared<Shpere>(Transform{{-10,10,0},{10,10,10},{1,0,0,0,}},glm::fvec4{1.0f,0.0f,0.f,0.f},1);
+	auto box =std::make_shared<Box>(Transform{},glm::fvec4{0,1,0,1}, glm::fvec3{1,2,4});
+	auto floor =std::make_shared<Box>(Transform{{0,-0.1,0},{1000,0.1,1000},(glm::angleAxis(-0.001f,glm::fvec3{1,0,0}))},glm::fvec4{1,1,1,1}, glm::fvec3{1,1,1});
 	scene->register_Camera(camera);
 	scene->SetCurrentCammera(camera->getID());
 	scene->register_VissualObject(sphere);
+	scene->register_VissualObject(box);
+	scene->register_VissualObject(floor);
 	
 
 	auto win =  vs.makeWindow({100,100},"Test");

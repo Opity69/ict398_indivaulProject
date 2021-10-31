@@ -20,13 +20,17 @@ bool Window::ShouldClose()
 
 void Window::Draw()
 {
+	if (!win_ptr)
+	{
+		return;
+	}
+	glfwMakeContextCurrent(win_ptr);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	int w = 1, h = 1;
-	if (win_ptr)
-	{
-		glfwGetFramebufferSize(win_ptr, &w, &h);
-	}
+
+	glfwGetFramebufferSize(win_ptr, &w, &h);
+
 	glViewport(0, 0, w, h);
 	if (!SceneToDraw.expired())
 	{
@@ -37,10 +41,8 @@ void Window::Draw()
 		}
 	}
 
-	if (win_ptr)
-	{
-		glfwSwapBuffers(win_ptr);
-	}
+
+	glfwSwapBuffers(win_ptr);
 }
 
 void Window::SetSceneToDraw(const std::shared_ptr<Scene>& scene)
@@ -56,10 +58,8 @@ glm::uvec2 Window::GetFsize()
 	{
 		glfwGetFramebufferSize(win_ptr, &x, &y);
 	}
-	return {x,y};
+	return {x, y};
 }
-
-
 
 
 GLFWwindow* VissaulEngine::sharewin = nullptr;
@@ -83,6 +83,7 @@ bool VissaulEngine::Initailize()
 		sharewin = glfwCreateWindow(1, 1, "", NULL, NULL);
 
 		glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+		glfwMakeContextCurrent(sharewin);
 	}
 
 	return isGlfwInit;
@@ -96,6 +97,7 @@ bool VissaulEngine::GlewInit()
 		if (glfwInit())
 		{
 			isGlewInit = false;
+			
 			return isGlewInit;
 		}
 		isGlewInit = true;
