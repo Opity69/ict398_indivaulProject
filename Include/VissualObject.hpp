@@ -9,6 +9,7 @@ class GLUquadric;
 class IVissualObject
 {
 public:
+	virtual ~IVissualObject() = default;
 
 
 protected:

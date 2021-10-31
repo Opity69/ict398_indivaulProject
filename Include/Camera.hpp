@@ -1,32 +1,36 @@
 #pragma once
 
 #include <Transform.hpp>
-#include <glm3/glm/gtc/type_ptr.hpp>
-class Camera
+
+
+class Camera: public TransFormable
 {
-	Transform transform_;
+public:
+	Camera(const Transform& trans, float near, float far, float fov, float aspect);
+
+
+private:
+
+	
 	float near = 0.01;
 	float far  =1000;
-	float ascept = 10;
+	float fov = 90;
+	float aspect = 10;
+
+
 	
 
 	
-	mutable  glm::fmat4 ViewProjectionMatrix_Cache;
+	mutable  glm::fmat4 ViewProjectionMatrix_Cache = {};
 	mutable  bool  matrix_valid = false;
 
 
+	void ReCompute();
+
 public:
-	float* matrixPtr()
-	{
+	Camera();
 
-		return  glm::value_ptr(ViewProjectionMatrix_Cache);
-	}
 
-	
-
-	
-	
-
-	
+	float* matrixPtr();
 };
 

@@ -1,28 +1,61 @@
 #pragma once
-#include <Glew/include/GL/glew.h>
-#include <Glfw/include/GLFW/glfw3.h>
-
-#include <Glfw/include/GLFW/glfw3.h>
 
 
-class WindowSubsystem
+
+
+#include <memory>
+
+#include <glm3/glm/glm.hpp>
+
+
+
+
+
+
+class Scene;
+struct GLFWwindow;
+
+
+
+class Window
 {
-	static bool init()
-	{
-		static bool intisalized =false;
-		if(!intisalized)
-		{
-			intisalized =glfwInit();
-		}
-		return intisalized;
+public:
+	explicit Window(GLFWwindow* win_ptr);
 
-	}
+private:
+	std::weak_ptr<Scene> SceneToDraw;
+	GLFWwindow* win_ptr =nullptr;
+private:
+	friend  class VissaulEngine;
+	
 
+public:
+	~Window();
+
+	bool ShouldClose();
+
+
+	void Draw();
+	void SetSceneToDraw(const std::shared_ptr<Scene>& scene);
 };
 
-
-class Widnow
+class VissaulEngine
 {
-	
+	static bool Initailize();
+
+	static bool GlewInit();
+
+
+	static  GLFWwindow* sharewin;
+public:
+	VissaulEngine();
+
+	std::unique_ptr<Window> makeWindow(const glm::uvec2& size, const char* title);
+
+
+	bool MainLoop();
+
+
+	~VissaulEngine();
 };
 

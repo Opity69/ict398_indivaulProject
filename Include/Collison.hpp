@@ -1,13 +1,13 @@
 #pragma once
 
 #include  <glm3/glm/glm.hpp>
+#include  "Transform.hpp"
 class Collison
 {
 };
 
 
 
-typedef int Transform;
 struct Sphere
 {
 

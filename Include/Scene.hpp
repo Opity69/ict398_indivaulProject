@@ -4,20 +4,34 @@
 
 
 #include  <memory>
+
+#include <unordered_map>
 #include  <vector>
 
 
 class Scene
 {
-	std::vector<std::shared_ptr<Camera>> cameras_;
+	std::unordered_map<uint64_t ,std::weak_ptr<Camera>> cameras_;
 
-	std::vector<std::shared_ptr<IVissualObject>> objects_;
-
-	void register_Camera(){};
-
-	void register_VissualObject(){};
+	std::weak_ptr<Camera> currentCamera = {};
 
 
+	std::unordered_map<uint64_t,std::shared_ptr<IVissualObject>> objects_;
+
+public:
+	void register_Camera(std::shared_ptr<Camera>& camera);;
+	void unregister_Camera(uint64_t id);;
+
+
+	void SetCurrentCammera(uint64_t id);
+
+	void register_VissualObject(std::shared_ptr<IVissualObject>& vsObject);;
+	void unregister_VissualObject(uint64_t id
+	);;
+
+
+public:
+	void Draw();;
 
 
 	
