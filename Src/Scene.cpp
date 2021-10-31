@@ -3,7 +3,7 @@
 
 void Scene::register_Camera(std::shared_ptr<Camera>& camera)
 {
-	// TODO() insert Caemras
+	cameras_.insert({camera->getID(),camera});
 }
 
 void Scene::unregister_Camera(uint64_t id)
@@ -24,7 +24,7 @@ void Scene::unregister_VissualObject(uint64_t id)
 
 void Scene::register_VissualObject(std::shared_ptr<IVissualObject>& vsObject)
 {
-	//TODO() inset vissual objects
+	objects_.insert({vsObject->getID(),vsObject});
 }
 
 void Scene::Draw()

@@ -3,9 +3,27 @@
 
 #include <iostream>
 
+#include "window.h"
+#include  "Scene.hpp"
+
 int main()
 {
-    std::cout << "Hello World!\n";
+
+	VissaulEngine vs;
+	auto scene = std::make_shared<Scene>();
+	auto camera = std::make_shared<Camera>(Transform{},0.001,100,90,1);
+
+	scene->register_Camera(camera);
+
+	auto win =  vs.makeWindow({100,100},"Test");
+	win->SetSceneToDraw(scene);
+
+	while (!win->ShouldClose() && vs.MainLoop())
+	{
+		win->Draw();
+		
+	}
+	
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

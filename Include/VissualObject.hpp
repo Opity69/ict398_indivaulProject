@@ -2,6 +2,7 @@
 //#include <GL/glu.h>
 #include <glm3/glm/glm.hpp>
 #include "Transform.hpp"
+#include  "UUID_Generator.hpp"
 
 
 class GLUquadric;
@@ -26,7 +27,10 @@ protected:
 	IVissualObject(const Transform& transform, const glm::fvec4& color);
 
 	IVissualObject();
+private:
+	UUID id;
 
+	
 
 public:
 	void Draw();
@@ -37,6 +41,7 @@ public:
 
 	void SetColor(const glm::fvec4& color);
 	glm::fvec4 GetColor();
+	UUID getID(){return  id;}
 };
 
 

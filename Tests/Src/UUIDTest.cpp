@@ -8,7 +8,7 @@ TEST_CASE("UUID")
 
 	SECTION("Create")
 	{
-		REQUIRE_FALSE(uuid != 0);
+		REQUIRE(uuid != 0);
 		
 		
 
