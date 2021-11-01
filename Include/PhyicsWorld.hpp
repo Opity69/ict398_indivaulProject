@@ -7,20 +7,19 @@
 #include  <glm3/glm/glm.hpp>
 #include  <glm3/glm/gtc/quaternion.hpp>
 #include "CollisonObject.hpp"
+#include <unordered_map>
 
 
 enum class BodyMode
 {
 	RIGID,
 	STATIC
-	
 };
 
 struct PostionState
 {
 	glm::fvec3 pos;
 	glm::fquat rot;
-	
 };
 
 
@@ -33,15 +32,14 @@ struct BodyProps
 struct BodyState
 {
 	PostionState postion_state;
-	LinearVelocity  linear_velocity;
+	LinearVelocity linear_velocity;
 	AngualrVelocity angualr_velocity;
 
 	LinearAcceleration linear_acceleration;
 	AngualrAcceleratiom angualr_acceleratiom;
 
 	Toruge total_Torgue = {};
-	Force  total_Force = {};
-	
+	Force total_Force = {};
 };
 
 
@@ -51,18 +49,39 @@ struct Body
 	BodyState state;
 
 	std::shared_ptr<CollisonObject> collison;
-	
+
 	std::weak_ptr<TransFormable> object_; // Thing to act on
-	
+
 	void IntergrateForce(float timestep)
 	{
-		
 	}
-	void IntergrateVelocity(float  timestep){};
+
+	void IntergrateVelocity(float timestep)
+	{
+		//state.linear_velocity += state.linear_acceleration.Integrate(timestep);  // TODO() add forces
+		//state.angualr_velocity += state.angualr_acceleratiom.Integrate(timestep);
+
+		state.postion_state.pos += state.linear_velocity.Value() * timestep;
+
+		auto axis =  state.angualr_velocity.Direction();
+		auto angle =state.angualr_velocity.Lenght();
+		if(fabs(angle) >0.0)
+		{
+			glm::fquat q = glm::angleAxis(angle,axis);
+
+			state.postion_state.rot = q * state.postion_state.rot;
+		}
+		
+
+		
+	};
+
+	void Exchange(Body& other, const Contact& c)
+	{
+	}
 
 	std::shared_ptr<CollisonObject>& GetCollison()
 	{
-		
 	}
 
 	bool CheckSuspend()
@@ -72,10 +91,10 @@ struct Body
 
 	void WriteBack()
 	{
-		if(!object_.expired())
+		if (!object_.expired())
 		{
 			auto ptr = object_.lock();
-			if(ptr)
+			if (ptr)
 			{
 				ptr->set_translation(state.postion_state.pos);
 				ptr->set_rotation(state.postion_state.rot);
@@ -85,115 +104,89 @@ struct Body
 
 	void CollisonSync()
 	{
-		if(collison)
+		if (collison)
 		{
 			collison->set_translation(state.postion_state.pos);
 			collison->set_rotation(state.postion_state.rot);
 		}
-		
 	}
-	
 };
 
 
-
-
-
-
-
 #define  MAX_CONTACTS  4
+
 struct BodyPair
 {
 	Contact contact;
 	std::shared_ptr<Body> A;
 	std::shared_ptr<Body> B;
 
-
-	
-
-	void Setup()
-	{
-		
-	}
-
 	void Solve()
 	{
-		
+		if (A && B)
+		{
+			A->Exchange(*B.get(), contact);
+		}
 	}
-	
 };
 
 
 class PhyicsWorld
 {
+	
 	std::vector<std::shared_ptr<Body>> bodies_;
-	//TODO() setup  sleeping
-	//std::vector<std::shared_ptr<Body>> activeBodies;  //TOD() 
 	std::vector<BodyPair> pairs_;
-	
-
-	
-
 
 
 private:
 	void SubStep(float TimeStep)
 	{
 		pairs_.clear();
-		auto val =bodies_.size();
+		auto val = bodies_.size();
 
 		Contact c;
 		for (int i = 0; i < val; ++i)
 		{
-			for (int k = i+1; k < val; ++k)
+			for (int k = i + 1; k < val; ++k)
 			{
-
-				//if(bodies_[i]->GetCollison()->Intersect(on_[k],c))
-				//{
-				//	//pairs_.push_back(BodyPair{c,collison_[i],collison_[k]})
-				//}
-			
+				if (bodies_[i]->GetCollison() && bodies_[k]->GetCollison())
+				{
+					if (bodies_[i]->GetCollison()->Intersect(*bodies_[k]->GetCollison().get(), c))
+					{
+						pairs_.push_back(BodyPair{c, bodies_[i], bodies_[k]});
+					}
+				}
+				
 			}
-		}		
+		}
 
 		for (int i = 0; i < pairs_.size(); ++i)
 		{
-			
 			pairs_[i].Solve();
 		}
 
 		for (int i = 0; i < bodies_.size(); ++i)
 		{
-
 			bodies_[i]->IntergrateForce(TimeStep);
 			bodies_[i]->IntergrateVelocity(TimeStep);
-			
 		}
 
-		
 
-		for (int i = 0; i <bodies_.size(); ++i)
+		for (int i = 0; i < bodies_.size(); ++i)
 		{
-
 			bodies_[i]->WriteBack();
 			bodies_[i]->CollisonSync();
 		}
-		
-		
 	}
+
 public:
 	PhyicsWorld()
 	{
-		
 	}
-	
 
 
 	void Update(float TimeStep)
 	{
 		SubStep(TimeStep);
 	}
-	
-	
 };
-

@@ -1,6 +1,7 @@
 #pragma once
 #include "Camera.hpp"
 #include "VissualObject.hpp"
+#include "PhyicsWorld.hpp"
 
 
 #include  <memory>
@@ -17,6 +18,7 @@ class Scene
 
 
 	std::unordered_map<uint64_t,std::shared_ptr<IVissualObject>> objects_;
+	PhyicsWorld phyics_world_;
 
 public:
 	void register_Camera(std::shared_ptr<Camera>& camera);;
@@ -26,14 +28,15 @@ public:
 	void SetCurrentCammera(uint64_t id);
 
 	void register_VissualObject(std::shared_ptr<IVissualObject> vsObject);;
-	void unregister_VissualObject(uint64_t id
-	);;
+	void unregister_VissualObject(uint64_t id);;
+
+	void register_PhyiscObject(std::shared_ptr<Body>& body);
+	void unregister_PhyiscObject(UUID id);
 
 
-public:
+
 	void Draw();;
 
-
-	
+	void Update(float Timestep);
 };
 

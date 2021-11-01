@@ -65,3 +65,8 @@ void Scene::Draw()
 
 	glPopMatrix();
 }
+
+void Scene::Update(float Timestep)
+{
+	phyics_world_.Update(Timestep);
+}

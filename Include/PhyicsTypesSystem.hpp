@@ -150,6 +150,8 @@ public:
 	{
 	}
 
+	explicit  LinearVelocity(const Vector_t& lin_vel ):Velocity(lin_vel){};
+
 	LinearSpeed ToSpeed()
 	{
 		return LinearSpeed(glm::length(value_));
@@ -159,6 +161,8 @@ public:
 	{
 		return Direction();
 	}
+
+	LinearVelocity& operator+=(const LinearVelocity& integrate);
 };
 
 class AngualrVelocity : public Velocity
@@ -189,10 +193,14 @@ public:
 	LinearAcceleration(Scalar_t x, Scalar_t y, Scalar_t z): Accelleration(x, y, z)
 	{
 	}
+
+	LinearVelocity Integrate(float timestep);
+	
 };
 
 class AngualrAcceleratiom : public Accelleration
 {
+	
 };
 
 class Force : VectorType
