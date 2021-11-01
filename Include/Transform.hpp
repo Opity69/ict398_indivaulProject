@@ -111,9 +111,14 @@ private:
 protected:
 	TransFormable(const Transform& trans);
 	TransFormable():transform_(){}
-	~TransFormable(){};
-public:
 
+	virtual  void OnTransform()
+	{
+		
+	}
+	
+public:
+    virtual  ~TransFormable(){};
 	glm::fvec3 get_translation() const;
 	void set_translation(const glm::fvec3& translation);
 	glm::fvec3 get_scale() const;

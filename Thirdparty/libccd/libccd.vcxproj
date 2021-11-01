@@ -15,6 +15,7 @@
     <ClCompile Include="src\mpr.c" />
     <ClCompile Include="src\polytope.c" />
     <ClCompile Include="src\support.c" />
+    <ClCompile Include="src\testsuites\support.c" />
     <ClCompile Include="src\vec3.c" />
   </ItemGroup>
   <ItemGroup>
@@ -24,6 +25,7 @@
     <ClInclude Include="src\ccd\config.h" />
     <ClInclude Include="src\ccd\quat.h" />
     <ClInclude Include="src\ccd\vec3.h" />
+    <ClInclude Include="src\testsuites\support.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

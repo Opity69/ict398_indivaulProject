@@ -30,6 +30,9 @@
     <ClCompile Include="src\vec3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\testsuites\support.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ccd\ccd.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ccd\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\testsuites\support.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

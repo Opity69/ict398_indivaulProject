@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Camera.cpp" />
-    <ClCompile Include="Src\Collison.cpp" />
+    <ClCompile Include="Src\CollisonObject.cpp" />
     <ClCompile Include="Src\CollisonSubSystem.cpp" />
     <ClCompile Include="Src\PhyicsTypesSystem.cpp" />
     <ClCompile Include="Src\PhyicsWorld.cpp" />
@@ -24,7 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\Camera.hpp" />
-    <ClInclude Include="Include\Collison.hpp" />
+    <ClInclude Include="Include\CollisonObject.hpp" />
     <ClInclude Include="Include\CollisonSubSystem.h" />
     <ClInclude Include="Include\PhyicsTypesSystem.hpp" />
     <ClInclude Include="Include\PhyicsWorld.hpp" />
