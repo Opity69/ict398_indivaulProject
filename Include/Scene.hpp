@@ -5,6 +5,7 @@
 
 
 #include  <memory>
+#include <string>
 
 #include <unordered_map>
 #include  <vector>
@@ -38,8 +39,31 @@ public:
 	void register_PhyiscObject(std::shared_ptr<Body>& body);
 	void unregister_PhyiscObject(UUID id);
 
+	void LoadBodyFromTokens(const std::vector<std::string> input,size_t index)
+	{
+		auto& next = input[index];
+
+		auto BodyType = std::stoi(next);
+		float r = std::stof(input[++index]);
+		float g = std::stof(input[++index]);
+		float b = std::stof(input[++index]);
+		float a = std::stof(input[++index]);
 
 
+		//pos
+		float p_x = std::stof(input[++index]);
+		float p_y = std::stof(input[++index]);
+		float p_z = std::stof(input[++index]);
+
+		float p1 = std::stof(input[++index]);
+		float p2 = std::stof(input[++index]);
+		float p3 = std::stof(input[++index]);
+
+		
+	}
+	void LoadCsv(const std::string& file_Path);
+
+	void LoadBodies(const std::string& file_Path);
 	void Draw();;
 
 	void Update(float Timestep);
