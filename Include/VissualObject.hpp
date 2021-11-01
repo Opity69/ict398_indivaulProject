@@ -7,14 +7,14 @@
 
 class GLUquadric;
 
-class IVissualObject
+class IVissualObject: public  TransFormable
 {
 public:
 	virtual ~IVissualObject();
 
 protected:
 
-	Transform transform_;
+	
 	glm::fvec4 color_;
 	mutable unsigned drawList = 0;
 	mutable  bool Built= false;

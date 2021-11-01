@@ -106,7 +106,7 @@ class TransFormable
 public:
 
 
-private:
+protected:
 	Transform transform_;
 protected:
 	TransFormable(const Transform& trans);
@@ -126,6 +126,17 @@ public:
 	glm::fquat get_rotation() const;
 	void set_rotation(const glm::fquat& rotation);
 
+
+	void SetTransform(const Transform& transform)
+	{
+		this->transform_ =transform;
+		OnTransform();
+	}
+
+	Transform getTransfrom() const
+	{
+		return  transform_;
+	}
 
 	void Translate(glm::fvec3 Translation);
 

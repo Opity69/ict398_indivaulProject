@@ -30,7 +30,7 @@
     <ClCompile Include="src\vec3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\testsuites\support.c">
+    <ClCompile Include="src\support_imp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -20,7 +20,16 @@ int main()
 	scene->register_VissualObject(sphere);
 	scene->register_VissualObject(box);
 	scene->register_VissualObject(floor);
-	
+
+	BodyState bodyState = {};
+	bodyState.postion_state.pos = box->get_translation();
+	bodyState.postion_state.rot  = box->get_rotation();
+	bodyState.angualr_velocity = {0,1,0};
+	bodyState.linear_velocity = {0,1,0};
+	BodyProps props = {};
+	auto body=  std::make_shared<Body>(BodyMode::RIGID,props,bodyState,box);
+
+	scene->AddBody(body);
 
 	auto win =  vs.makeWindow({100,100},"Test");
 	win->SetSceneToDraw(scene);
@@ -28,10 +37,12 @@ int main()
 	while (!win->ShouldClose() && vs.MainLoop())
 	{
 		win->Draw();
+		win->Update(0.1);
 		//camera->Translate({0,0,1});
 		//camera->Rotate(glm::angleAxis(0.1f, glm::fvec3(0.0f,1.0f,0.0f)));
 		auto size = win->GetFsize();
 		camera->set_aspect((float)size.x / (float) size.y);
+		
 		
 	}
 	

@@ -1,5 +1,9 @@
 #include "PhyicsTypesSystem.hpp"
 
+ScalarType::ScalarType(Scalar_t value): value_(value)
+{
+}
+
 LinearVelocity& LinearVelocity::operator+=(const LinearVelocity& integrate)
 {
 	this->value_ += integrate.value_;

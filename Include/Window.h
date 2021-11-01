@@ -38,6 +38,7 @@ public:
 	void Draw();
 	void SetSceneToDraw(const std::shared_ptr<Scene>& scene);
 	glm::uvec2 GetFsize();
+	void Update(float x);
 };
 
 class VissaulEngine

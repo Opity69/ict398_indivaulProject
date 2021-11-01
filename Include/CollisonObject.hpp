@@ -3,7 +3,7 @@
 #include  <glm3/glm/glm.hpp>
 #include  "Transform.hpp"
 #include  <ccd/ccd.h>
-#include  <testsuites/support.h>
+#include  <support_imp.h>
 
 
 class CollisonObject;
@@ -17,31 +17,37 @@ struct AABB
 	bool intersect(const AABB& other)
 	{
 		// TODO()  intersect aabb
+
+		return false;
 		
 	}
 	AABB Rotate(const glm::fquat& rot)
 	{
-		
+		return  {};
 	}
 
 	AABB Scale(const glm::fvec3 scale)
 	{
-		
+		return  {};
 	}
 
 	AABB Translate(const glm::fvec3 transLate)
 	{
-		
+		return  {};
 	}
 
 	AABB Transform(const glm::fvec3 translate, const glm::fvec3 scale,const glm::fquat rot)
 	{
-	
+		return  {};
 	}
 	
 	
 };
 
+
+void VecCopy(ccd_vec3_t* vec, const glm::fvec3& in);
+
+void QuatCopy(ccd_quat_t* quat, const glm::fquat& rot);
 
 
 struct Contact
@@ -74,55 +80,44 @@ public:
 
 	virtual  void* getBaseType() const =0;
 
-	bool Intersect(const CollisonObject& other, Contact&  contact)
-	{
-		if(this->GetAABB().intersect(other.GetAABB()))
-		{
-			if(InsectTest(*this,other,contact))
-			{
-				return true;
-			}
-		}
-		
-		return false;
-	}
+bool Intersect(const CollisonObject& other, Contact& contact) const;
 
 protected:
 	
 };
 
 
-bool InsectTest(const  CollisonObject& objA, const CollisonObject& objB, Contact& contact)
+
+
+
+struct CSphere :public  CollisonObject
 {
-	ccd_t ccd;
-      CCD_INIT(&ccd); // initialize ccd_t struct
-
-      // set up ccd_t struct
-      ccd.support1       = ccdSupport; // support function for first object
-      ccd.support2       = ccdSupport; // support function for second object
-      ccd.max_iterations = 100;     // maximal number of iterations
-      ccd.epa_tolerance  = 0.0001;  // maximal tolerance fro EPA part
-
-      ccd_real_t depth;
-      ccd_vec3_t dir, pos;
-	 int intersect = ccdGJKPenetration(objA.getBaseType(), objB.getBaseType(), &ccd, &depth, &dir, &pos);
-
-
-	contact.depth =depth;
-	contact.norm = {dir.v[0],dir.v[1],dir.v[2]};
-	contact.pos = {pos.v[0],pos.v[1],pos.v[2]};
-	return (intersect  == 0);
-}
+	CSphere(const Transform& trans, float radius)
+		: CollisonObject(trans),
+		  radius(radius)
+		 
+	{
+		Setup();
+	}
+	CSphere():CollisonObject({})
+	{
+		Setup();
+	}
 
 
+	void Setup()
+	{
+		sphereData.type = CCD_OBJ_SPHERE;
+		VecCopy(&sphereData.pos,this->get_translation());
+		QuatCopy(&sphereData.quat,this->get_rotation());
+		sphereData.radius =radius;
+	}
 
-struct Sphere :public  CollisonObject
-{
 	[[nodiscard]] float get_radius() const;
 	void set_radius(const float radius);
 	float radius = 1;
 
-	 mutable  CCD_SPHERE(sphereData);
+	mutable  ccd_sphere_t sphereData;
 	
 
 	
@@ -132,13 +127,42 @@ protected:
 	void OnTransform() override;
 };
 
-struct Box: public  CollisonObject
+struct CBox: public  CollisonObject
 {
-	glm::fvec3 extends;
-	mutable  CCD_BOX(box_data);
-
+	CBox(const Transform& trans, const glm::fvec3& extends)
+		: CollisonObject(trans),
+		  extends(extends)
+	{
+		Setup();
+	}
+	
 
 	
+
+	glm::fvec3 extends;
+
+protected:
+	mutable  ccd_box_t boxData;
+
+
+	void Setup()
+	{
+		boxData.type = CCD_OBJ_BOX;
+		boxData.x = extends.x;
+		boxData.y = extends.y;
+		boxData.z = extends.z;
+
+		VecCopy(&boxData.pos,this->get_translation());
+		QuatCopy(&boxData.quat,this->get_rotation());
+
+		
+	}
+
+
+public:
+	void* getBaseType() const override;
+protected:
+	void OnTransform() override;
 };
 
 

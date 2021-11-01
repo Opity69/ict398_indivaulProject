@@ -18,22 +18,22 @@ enum class BodyMode
 
 struct PostionState
 {
-	glm::fvec3 pos;
-	glm::fquat rot;
+	glm::fvec3 pos = {};
+	glm::fquat rot = {1,0,0,0};
 };
 
 
 struct BodyProps
 {
-	Mass mass;
+	Mass mass {1.0f};
 	InteriaTensor tensor;
 };
 
 struct BodyState
 {
-	PostionState postion_state;
-	LinearVelocity linear_velocity;
-	AngualrVelocity angualr_velocity;
+	PostionState postion_state = {};
+	LinearVelocity linear_velocity = {};
+	AngualrVelocity angualr_velocity = {};
 
 	LinearAcceleration linear_acceleration;
 	AngualrAcceleratiom angualr_acceleratiom;
@@ -45,6 +45,19 @@ struct BodyState
 
 struct Body
 {
+	Body(BodyMode mode, const BodyProps& props, const BodyState& state, const std::weak_ptr<TransFormable>& object)
+		: mode(mode),
+		  props(props),
+		  state(state),
+		  object_(object)
+	{
+	}
+
+
+
+	
+	
+	BodyMode mode = BodyMode::RIGID;
 	BodyProps props;
 	BodyState state;
 
@@ -54,6 +67,11 @@ struct Body
 
 	void IntergrateForce(float timestep)
 	{
+
+		if(mode == BodyMode::STATIC)
+		{
+			return;
+		}
 	}
 
 	void IntergrateVelocity(float timestep)
@@ -61,10 +79,18 @@ struct Body
 		//state.linear_velocity += state.linear_acceleration.Integrate(timestep);  // TODO() add forces
 		//state.angualr_velocity += state.angualr_acceleratiom.Integrate(timestep);
 
+
+		if(mode == BodyMode::STATIC)
+		{
+			return;
+		}
+		
 		state.postion_state.pos += state.linear_velocity.Value() * timestep;
 
 		auto axis =  state.angualr_velocity.Direction();
 		auto angle =state.angualr_velocity.Lenght();
+
+		angle  *= timestep;
 		if(fabs(angle) >0.0)
 		{
 			glm::fquat q = glm::angleAxis(angle,axis);
@@ -80,8 +106,14 @@ struct Body
 	{
 	}
 
+	void SetCollison(std::shared_ptr<CollisonObject>& collison)
+	{
+		this->collison = collison;
+	}
+
 	std::shared_ptr<CollisonObject>& GetCollison()
 	{
+		return  collison;
 	}
 
 	bool CheckSuspend()
@@ -184,6 +216,11 @@ public:
 	{
 	}
 
+
+	void  AddBody(std::shared_ptr<Body>& body)
+	{
+		bodies_.push_back(body);
+	}
 
 	void Update(float TimeStep)
 	{

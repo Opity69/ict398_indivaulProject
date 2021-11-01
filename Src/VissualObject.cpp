@@ -15,7 +15,7 @@ IVissualObject::~IVissualObject()
 	glDeleteLists(drawList,1);
 }
 
-IVissualObject::IVissualObject(const Transform& transform, const glm::fvec4& color): transform_(transform),
+IVissualObject::IVissualObject(const Transform& transform, const glm::fvec4& color):TransFormable(transform),
 	color_(color)
 {
 	drawList = glGenLists(1);
@@ -34,15 +34,7 @@ void IVissualObject::Draw()
 	DrawTearDown();
 }
 
-Transform IVissualObject::get_transform_()
-{
-	return transform_;
-}
 
-void IVissualObject::SetTransform(const Transform& trans)
-{
-	transform_ = trans;
-}
 
 void IVissualObject::SetColor(const glm::fvec4& color)
 {

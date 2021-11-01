@@ -35,7 +35,7 @@ public:
 
 
 protected:
-	 VectorType(const Vector_t& value): value_(value)
+	VectorType(const Vector_t& value): value_(value)
 	{
 	};
 
@@ -49,7 +49,7 @@ protected:
 class ScalarType
 {
 protected:
-	Scalar_t value_;
+	Scalar_t value_ = 0;
 
 
 public:
@@ -65,17 +65,26 @@ public:
 
 protected:
 	explicit ScalarType(Scalar_t value);
+	ScalarType() = default;
 	~ScalarType() = default;
 };
 
 class Mass : public ScalarType
 {
+public:
+	explicit Mass(Scalar_t val): ScalarType(val)
+	{
+	}
+
+	Mass(): ScalarType(1)
+	{
+	};
 };
 
 
 class InteriaTensor
 {
-	
+	glm::fvec3 tensor = {};
 };
 
 struct LinearSpeed : public ScalarType
@@ -108,7 +117,7 @@ class Postion
 
 
 public:
-	explicit Postion(Scalar_t x ,Scalar_t y, Scalar_t z): pos_(x,y,z)
+	explicit Postion(Scalar_t x, Scalar_t y, Scalar_t z): pos_(x, y, z)
 	{
 	}
 
@@ -150,7 +159,13 @@ public:
 	{
 	}
 
-	explicit  LinearVelocity(const Vector_t& lin_vel ):Velocity(lin_vel){};
+	LinearVelocity() : Velocity({0, 0, 0})
+	{
+	};
+
+	explicit LinearVelocity(const Vector_t& lin_vel): Velocity(lin_vel)
+	{
+	};
 
 	LinearSpeed ToSpeed()
 	{
@@ -167,9 +182,14 @@ public:
 
 class AngualrVelocity : public Velocity
 {
+public:
 	AngualrVelocity(Scalar_t x, Scalar_t y, Scalar_t z): Velocity({x, y, z})
 	{
 	}
+
+	AngualrVelocity(): Velocity({0, 0, 0})
+	{
+	};
 
 	AngularSpeed ToSpeed()
 	{
@@ -195,74 +215,76 @@ public:
 	}
 
 	LinearVelocity Integrate(float timestep);
-	
 };
 
 class AngualrAcceleratiom : public Accelleration
 {
-	
+
+public:
+	AngualrAcceleratiom(Scalar_t x, Scalar_t y, Scalar_t z): Accelleration(x, y, z)
+	{
+	}
+
+	AngualrAcceleratiom(): Accelleration(0, 0, 0)
+	{
+	};
 };
 
 class Force : VectorType
 {
-
 public:
-	Force():VectorType(0,0,0)
+	Force(): VectorType(0, 0, 0)
 	{
-		
 	}
 
-	Force(const LinearAcceleration& acceleration, const Mass& mass): VectorType(acceleration.Value()* mass.GetValue())
+	Force(const LinearAcceleration& acceleration, const Mass& mass): VectorType(acceleration.Value() * mass.GetValue())
 	{
 	}
 };
 
 class Toruge : VectorType
 {
-
-
 public:
-	Toruge():VectorType(0,0,0){};
+	Toruge(): VectorType(0, 0, 0)
+	{
+	};
+
 	Scalar_t Strength() const
 	{
 		return glm::length(value_);
 	}
+
 	Vector_t Axis()
 	{
 		return Direction();
 	}
-	
 };
 
 
-class PointForce: public  VectorType
+class PointForce : public VectorType
 {
-
-
 	PointForce(const Postion& pos, const Vector_t& force);
-	Postion pointOfAppliaction  {0,0,0};
+	Postion pointOfAppliaction{0, 0, 0};
 
 
 	Scalar_t Strenght()
 	{
-		return  Lenght();
+		return Lenght();
 	}
 
 	Vector_t ToDirection()
 	{
-		return  Direction();
+		return Direction();
 	}
 
-	
-	Toruge getToruge(int a ,int b)
+
+	Toruge getToruge(int a, int b)
 	{
-		return  {};
+		return {};
 	}
 
 	Force getForce(const Mass& mass)
 	{
-		return  {};
+		return {};
 	}
-
-	
 };

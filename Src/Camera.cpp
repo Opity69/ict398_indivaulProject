@@ -70,6 +70,10 @@ void Camera::ReCompute()
 		{
 			aspect =1;
 		}
+		if(_isnanf(aspect))
+		{
+			aspect =1;
+		}
 		glm::fmat4 pro = glm::perspective<float>(fov, aspect, near, far);
 
 		auto forward = this->localForward();

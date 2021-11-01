@@ -61,6 +61,18 @@ glm::uvec2 Window::GetFsize()
 	return {x, y};
 }
 
+void Window::Update(float x)
+{
+	if (!SceneToDraw.expired())
+	{
+		auto ptr = SceneToDraw.lock();
+		if (ptr)
+		{
+			ptr->Update(x);
+		}
+	}
+}
+
 
 GLFWwindow* VissaulEngine::sharewin = nullptr;
 
