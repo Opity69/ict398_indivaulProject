@@ -57,7 +57,7 @@ void Shpere::Rebuild()
 {
 	glNewList(drawList,GL_COMPILE);
 	glColor4fv(glm::value_ptr(color_));
-	gluSphere(obj_, radius, 16, 8);
+	gluSphere(obj_, radius, 24, 32);
 	glEndList();
 }
 

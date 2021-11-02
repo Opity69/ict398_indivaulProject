@@ -29,14 +29,53 @@ bool InsectTest(const CollisonObject& objA, const CollisonObject& objB, Contact&
 	ccd.epa_tolerance = 0.0001; // maximal tolerance fro EPA part
 
 	ccd_real_t depth;
+	depth = 0;
 	ccd_vec3_t dir, pos;
-	int intersect = ccdGJKPenetration(objA.getBaseType(), objB.getBaseType(), &ccd, &depth, &dir, &pos);
+
+	// Init just in case
+	for (int i = 0; i < 3; ++i)
+	{
+		pos.v[i] =0;
+	}
+	for (int i = 0; i < 3; ++i)
+	{
+		dir.v[i] =0;
+	}
+	
+	ccd_t ccd2;
+	CCD_INIT(&ccd2); // initialize ccd_t struct
+
+	// set up ccd_t struct
+	ccd2.support1 = ccdSupport; // support function for first object
+	ccd2.support2 = ccdSupport; // support function for second object
+	ccd2.max_iterations = 50; // maximal number of iterations
+	ccd2.epa_tolerance = 0.001; // maximal tolerance fro EPA part
+	ccd2.center1        = ccdObjCenter;  // center function for first object
+      ccd2.center2        = ccdObjCenter;  // center function for second object
+      ccd2.mpr_tolerance  = 0.0001;
+
+	  //TODO() figure out why this does work for this edge case
+	//int intersect = ccdGJKPenetration(objA.getBaseType(), objB.getBaseType(), &ccd2, &depth, &dir, &pos);
+	
+	int intersect = ccdGJKPenetration(objA.getBaseType(), objB.getBaseType(), &ccd2, &depth, &dir, &pos);
 
 
+
+	
 	contact.depth = depth;
 	contact.norm = {dir.v[0], dir.v[1], dir.v[2]};
 	contact.pos = {pos.v[0], pos.v[1], pos.v[2]};
-	return (intersect == 0);
+
+	for (int i = 0; i < 3; ++i)
+	{
+		float val = contact.norm[i];
+		if(isinf(val) || isnan(val))
+		{
+			contact.norm = {0,1,0};
+		}
+	}
+	
+	return  intersect ==0;
 }
 
 bool CollisonObject::Intersect(const CollisonObject& other, Contact& contact) const
@@ -44,13 +83,9 @@ bool CollisonObject::Intersect(const CollisonObject& other, Contact& contact) co
 	//if (this->GetAABB().intersect(other.GetAABB()))
 	//{
 	
-	if (InsectTest(*this, other, contact))
-	{
-		return true;
-	}
-	//}
+	return  InsectTest(*this, other, contact);
+	
 
-	return false;
 }
 
 float CSphere::get_radius() const

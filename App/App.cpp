@@ -13,10 +13,10 @@ int main()
 	BodyProps props = {};
 	BodyState state = {};
 	Transform CameraTras = {};
-	CameraTras.set_translation({0,10,80});
-	CameraTras.set_rotation(glm::angleAxis(-0.1f, glm::fvec3{1,0,0}));
+	CameraTras.set_translation({0,20,80});
+	CameraTras.set_rotation(glm::angleAxis(-0.2f, glm::fvec3{1,0,0}));
 	auto scene = std::make_shared<Scene>();
-	auto camera = std::make_shared<Camera>(CameraTras,0.001,100,90,1);
+	auto camera = std::make_shared<Camera>(CameraTras,0.001,1000,90,1);
 
 	scene->register_Camera(camera);
 	scene->SetCurrentCammera(camera->getID());
@@ -27,9 +27,9 @@ int main()
 
 
 	// Setup Floor
-	glm::fvec3 floor_extends = {100,0.1f,100};
+	glm::fvec3 floor_extends = {100,10.f,100};
 	Transform floor_t =  {};
-	floor_t.set_translation({0,0,0});
+	floor_t.set_translation({0,-20.0f,0});
 	auto floor =std::make_shared<Box>(floor_t,glm::fvec4{1,1,1,1},floor_extends);
 	auto floorcollison = std::make_shared<CBox>(floor->getTransfrom(), floor_extends);
 	props.mass = Mass(inf);
@@ -41,8 +41,10 @@ int main()
 	state.linear_velocity = {0,0,0};	
 	auto  floorbody = std::make_shared<Body>(BodyMode::STATIC,props,state,floor);
 	floorbody->SetCollison(floorcollison);
+	floorbody->tag = "floor";
 	scene->register_VissualObject(floor);
 	scene->register_PhyiscObject(floorbody);
+	
 	
 
 	// Setup Box
@@ -53,7 +55,7 @@ int main()
 	box_t.set_translation({0,20,0});
 	auto box =std::make_shared<Box>(box_t,glm::fvec4{0,1,0,1},box_ext);
 	auto boxCollison = std::make_shared<CBox>(box->getTransfrom(), box_ext);
-	props.mass = Mass(30);
+	props.mass = Mass(40);
 	props.tensor = InteriaTensor(20,20,20);
 
 	state.postion_state.pos = box->get_translation();
@@ -62,6 +64,7 @@ int main()
 	state.linear_velocity = {0,-2.5,0};
 	
 	auto  boxbody = std::make_shared<Body>(BodyMode::RIGID,props,state,box);
+	boxbody->tag = "Box";
 	boxbody->SetCollison(boxCollison);
 	scene->register_VissualObject(box);
 	scene->register_PhyiscObject(boxbody);
@@ -73,15 +76,17 @@ int main()
 	auto sphere =std::make_shared<Shpere>(sphere_trans,glm::fvec4{0,1,1,1},radius);
 	auto sphereCollison = std::make_shared<CSphere>(sphere->getTransfrom(), radius);
 	props.mass = Mass(10);
-	props.tensor = InteriaTensor(20,20,20);
+	props.tensor = InteriaTensor(3,3,3);
 
+	
 	state.postion_state.pos = sphereCollison->get_translation();
 	state.postion_state.rot  = sphereCollison->get_rotation();
 	state.angualr_velocity = {0,0,0};
-	state.linear_velocity = {0,-1.5,0};
+	state.linear_velocity = {0,-2.5,0};
 	
 	auto  sphereBody = std::make_shared<Body>(BodyMode::RIGID,props,state,sphere);
 	sphereBody->SetCollison(sphereCollison);
+	sphereBody->tag = "Sphere";
 	scene->register_VissualObject(sphere);
 	scene->register_PhyiscObject(sphereBody);
 	

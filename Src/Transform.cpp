@@ -71,6 +71,7 @@ glm::fvec3 TransFormable::get_translation() const
 void TransFormable::set_translation(const glm::fvec3& translation)
 {
 	transform_.set_translation(translation);
+	
 	OnTransform();
 }
 

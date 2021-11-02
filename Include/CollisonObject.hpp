@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include  <glm3/glm/glm.hpp>
 #include  "Transform.hpp"
 #include  <ccd/ccd.h>
@@ -49,12 +50,37 @@ void VecCopy(ccd_vec3_t* vec, const glm::fvec3& in);
 
 void QuatCopy(ccd_quat_t* quat, const glm::fquat& rot);
 
+std::string VecToString( const  glm::fvec3& vec)
+{
+	std::string out;
+	out +="v:";
+	for (int i = 0; i < 3; ++i)
+	{
+		out+=vec.x;
+		out+=",";
+	}
+	out +="\t";
+	return  out;
+}
+
 
 struct Contact
 {
 	glm::fvec3 pos;
 	glm::fvec3 norm;
 	float depth;
+
+	std::string ToString() const
+	{
+		std::string out;
+		out += "Pos:";
+		out += VecToString(pos);
+		out +="\tnorm";
+		out += VecToString(norm);
+		out +="\tdepth";
+		out += depth;
+		return out;
+	}
 };
 
 bool InsectTest(const  CollisonObject& objA, const CollisonObject& objB, Contact& contact);
