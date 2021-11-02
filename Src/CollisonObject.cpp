@@ -41,13 +41,14 @@ bool InsectTest(const CollisonObject& objA, const CollisonObject& objB, Contact&
 
 bool CollisonObject::Intersect(const CollisonObject& other, Contact& contact) const
 {
-	if (this->GetAABB().intersect(other.GetAABB()))
+	//if (this->GetAABB().intersect(other.GetAABB()))
+	//{
+	
+	if (InsectTest(*this, other, contact))
 	{
-		if (InsectTest(*this, other, contact))
-		{
-			return true;
-		}
+		return true;
 	}
+	//}
 
 	return false;
 }
@@ -62,6 +63,7 @@ void CSphere::set_radius(const float radius)
 	this->radius = radius;
 	Setup();
 }
+
 void* CSphere::getBaseType() const
 {
 	return &sphereData;
@@ -70,19 +72,14 @@ void* CSphere::getBaseType() const
 void CSphere::OnTransform()
 {
 	Setup();
-	
-
 }
 
 void* CBox::getBaseType() const
 {
-
 	return &boxData;
 }
 
 void CBox::OnTransform()
 {
-
 	Setup();
 }
-

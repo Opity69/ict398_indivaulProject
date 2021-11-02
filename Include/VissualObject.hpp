@@ -33,9 +33,7 @@ private:
 
 public:
 	void Draw();
-	Transform get_transform_();
-
-	void SetTransform(const Transform& trans);
+	
 	
 
 	void SetColor(const glm::fvec4& color);

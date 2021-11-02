@@ -28,6 +28,11 @@ void Scene::unregister_VissualObject(uint64_t id)
 	objects_.erase(id);
 }
 
+void Scene::register_PhyiscObject(std::shared_ptr<Body>& body)
+{
+	phyics_world_.AddBody(body);
+}
+
 void Scene::register_VissualObject(std::shared_ptr<IVissualObject> vsObject)
 {
 	objects_.insert({vsObject->getID(), vsObject});

@@ -25,8 +25,8 @@ struct PostionState
 
 struct BodyProps
 {
-	Mass mass {1.0f};
-	InteriaTensor tensor;
+	Mass mass_inv {1.0f};
+	InteriaTensor tensor_inv;
 };
 
 struct BodyState
@@ -104,11 +104,16 @@ struct Body
 
 	void Exchange(Body& other, const Contact& c)
 	{
+		state.linear_velocity.SetValue(state.linear_velocity.Value()*-1.0f);
+		state.angualr_velocity.SetValue(state.angualr_velocity.Value()*-1.0f);
+
+		other.state.linear_velocity.SetValue(other.state.linear_velocity.Value()*-1.0f);
+		other.state.angualr_velocity.SetValue(other.state.angualr_velocity.Value()*-1.0f);
 	}
 
-	void SetCollison(std::shared_ptr<CollisonObject>& collison)
+	void SetCollison(const std::shared_ptr<CollisonObject>& colision)
 	{
-		this->collison = collison;
+		this->collison = colision;
 	}
 
 	std::shared_ptr<CollisonObject>& GetCollison()
@@ -155,6 +160,7 @@ struct BodyPair
 
 	void Solve()
 	{
+		
 		if (A && B)
 		{
 			A->Exchange(*B.get(), contact);
@@ -177,13 +183,14 @@ private:
 		auto val = bodies_.size();
 
 		Contact c;
-		for (int i = 0; i < val; ++i)
+		for (size_t i = 0; i < val; ++i)
 		{
-			for (int k = i + 1; k < val; ++k)
+			bodies_[i]->CollisonSync();
+			for (size_t k = i + 1; k < val; ++k)
 			{
 				if (bodies_[i]->GetCollison() && bodies_[k]->GetCollison())
 				{
-					if (bodies_[i]->GetCollison()->Intersect(*bodies_[k]->GetCollison().get(), c))
+					if (bodies_[i]->GetCollison()->Intersect(*bodies_[k]->GetCollison(), c))
 					{
 						pairs_.push_back(BodyPair{c, bodies_[i], bodies_[k]});
 					}

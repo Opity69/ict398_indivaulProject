@@ -38,6 +38,7 @@ void Transform::set_rotation(const glm::fquat& rotation)
 {
 	rotation_ = rotation;
 	InvalidMatrix();
+	
 }
 
 TransFormable::TransFormable(const Transform& trans): transform_(trans)
@@ -47,16 +48,19 @@ TransFormable::TransFormable(const Transform& trans): transform_(trans)
 void TransFormable::Translate(glm::fvec3 Translation)
 {
 	transform_.Translate(Translation);
+	OnTransform();
 }
 
 void TransFormable::Scale(glm::fvec3 scale)
 {
 	transform_.Scale(scale);
+	OnTransform();
 }
 
 void TransFormable::Rotate(glm::fquat rotation)
 {
 	transform_.Rotate(rotation);
+	OnTransform();
 }
 
 glm::fvec3 TransFormable::get_translation() const
@@ -67,6 +71,7 @@ glm::fvec3 TransFormable::get_translation() const
 void TransFormable::set_translation(const glm::fvec3& translation)
 {
 	transform_.set_translation(translation);
+	OnTransform();
 }
 
 glm::fvec3 TransFormable::get_scale() const
@@ -76,7 +81,8 @@ glm::fvec3 TransFormable::get_scale() const
 
 void TransFormable::set_scale(const glm::fvec3& scale)
 {
-	return transform_.set_translation(scale);
+	 transform_.set_translation(scale);
+	OnTransform();
 }
 
 glm::fquat TransFormable::get_rotation() const
@@ -87,4 +93,5 @@ glm::fquat TransFormable::get_rotation() const
 void TransFormable::set_rotation(const glm::fquat& rotation)
 {
 	transform_.set_rotation(rotation);
+	OnTransform();
 }

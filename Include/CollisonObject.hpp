@@ -17,8 +17,8 @@ struct AABB
 	bool intersect(const AABB& other)
 	{
 		// TODO()  intersect aabb
-
-		return false;
+		// Just ignore Broadphase
+		return true;
 		
 	}
 	AABB Rotate(const glm::fquat& rot)

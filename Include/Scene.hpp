@@ -26,10 +26,7 @@ public:
 	void unregister_Camera(uint64_t id);;
 
 
-	void AddBody(std::shared_ptr<Body>& body)
-	{
-		phyics_world_.AddBody(body);
-	}
+	
 
 	void SetCurrentCammera(uint64_t id);
 

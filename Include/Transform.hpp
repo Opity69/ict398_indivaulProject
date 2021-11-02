@@ -59,10 +59,19 @@ public:
 		
 	}
 	Transform(){};
+
+	Transform& operator = (const  Transform& other)
+	{
+		translation_ = other.translation_;
+		rotation_ = other.rotation_;
+		scale_ = other.scale_;
+		InvalidMatrix();
+	} 
 	
 	void InvalidMatrix() const
 	{
 		ValidMatrix = false;
+		
 	};
 
 	bool CacheValid()
