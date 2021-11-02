@@ -66,7 +66,7 @@ void Shpere::DrawSetup()
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	Transform t =transform_;
-	t.Scale({radius,radius,radius});
+	
 	glLoadMatrixf(t.getMatrixPtr());
 }
 

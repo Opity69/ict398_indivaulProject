@@ -56,7 +56,7 @@ int main()
 	props.mass = Mass(30);
 	props.tensor = InteriaTensor(20,20,20);
 
-	state.postion_state.pos = box->get_translation() + glm::fvec3(20,20,20);
+	state.postion_state.pos = box->get_translation();
 	state.postion_state.rot  = box->get_rotation();
 	state.angualr_velocity = {0,0,0};
 	state.linear_velocity = {0,-2.5,0};
@@ -67,6 +67,24 @@ int main()
 	scene->register_PhyiscObject(boxbody);
 	
 
+	Transform sphere_trans = {};
+	float radius = 4;
+	sphere_trans.set_translation(glm::fvec3(0,60,0));
+	auto sphere =std::make_shared<Shpere>(sphere_trans,glm::fvec4{0,1,1,1},radius);
+	auto sphereCollison = std::make_shared<CSphere>(sphere->getTransfrom(), radius);
+	props.mass = Mass(10);
+	props.tensor = InteriaTensor(20,20,20);
+
+	state.postion_state.pos = sphereCollison->get_translation();
+	state.postion_state.rot  = sphereCollison->get_rotation();
+	state.angualr_velocity = {0,0,0};
+	state.linear_velocity = {0,-1.5,0};
+	
+	auto  sphereBody = std::make_shared<Body>(BodyMode::RIGID,props,state,sphere);
+	sphereBody->SetCollison(sphereCollison);
+	scene->register_VissualObject(sphere);
+	scene->register_PhyiscObject(sphereBody);
+	
 
 	
 	//scene->register_VissualObject(sphere);

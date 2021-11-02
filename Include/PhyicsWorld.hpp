@@ -143,7 +143,7 @@ struct Body
 			ImpluseApply(-impluse,other.ModiftyState(),other.props,c);
 		}
 
-		if(mode != BodyMode::STATIC)
+		/*if(mode != BodyMode::STATIC)
 		{
 			this->state.postion_state.pos +=  -c.norm * (c.depth + fudge);
 		}else
@@ -153,7 +153,7 @@ struct Body
 				other.state.postion_state.pos +=  c.norm * (c.depth + fudge) ;
 			}
 		}
-		
+		*/
 		
 	}
 
