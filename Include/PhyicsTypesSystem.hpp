@@ -72,19 +72,111 @@ protected:
 class Mass : public ScalarType
 {
 public:
-	explicit Mass(Scalar_t val): ScalarType(val)
+	
+
+	
+
+private:
+	float inv;
+public:
+	explicit Mass(Scalar_t val): ScalarType(val) 
 	{
+		Setup();
 	}
 
 	Mass(): ScalarType(1)
 	{
+		Setup();
 	};
+
+
+	float getInv() const
+	{
+
+		
+		return inv;
+	}
+	
+
+	
+	
+	void Setup()
+	{
+
+		if(fabs(value_) <0.001)
+		{
+			value_ = 0.1;
+		}
+
+		if(isinf(value_))
+		{
+			inv = 0;
+			return;
+		}
+		inv = 1/this->value_;
+	}
 };
 
 
 class InteriaTensor
 {
 	glm::fvec3 tensor = {};
+
+	glm::fvec3 inv = {};
+
+
+public:
+
+	explicit  InteriaTensor(const glm::fvec3& vec):tensor(vec)
+	{
+		Setup();
+	}
+
+
+	InteriaTensor(Scalar_t xx ,Scalar_t yy ,Scalar_t zz):tensor(xx,yy,zz)
+	{
+		Setup();
+	}
+
+	InteriaTensor():tensor(1,1,1)
+	{
+		Setup();
+	}
+
+
+	glm::fvec3 getTensor() const
+	{
+		return  tensor;
+	}
+
+	glm::fvec3 getInv() const
+	{
+		return  inv;
+	}
+
+	void Setup()
+	{
+		for (int i = 0; i < 3; ++i)
+		{
+			if(fabs(tensor[i]) < 0.001)
+			{
+				tensor[i] = 0.01;
+			}
+		}
+
+		
+		inv =  {1.0/tensor.x, 1.0/tensor.y ,1.0/tensor.z};
+
+		for (int i = 0; i < 3; ++i)
+		{
+			if(isinf(tensor[i]))
+			{
+				inv[i] = 0;
+			}
+		}
+
+		
+	}
 };
 
 struct LinearSpeed : public ScalarType
@@ -189,7 +281,9 @@ public:
 
 	AngualrVelocity(): Velocity({0, 0, 0})
 	{
-	};
+	}
+
+	AngualrVelocity(const glm::fvec3& vec);;
 
 	AngularSpeed ToSpeed()
 	{

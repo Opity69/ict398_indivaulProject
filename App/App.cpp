@@ -8,12 +8,15 @@
 
 int main()
 {
-
+	float inf =INFINITY;
 	VissaulEngine vs;
 	BodyProps props = {};
 	BodyState state = {};
+	Transform CameraTras = {};
+	CameraTras.set_translation({0,10,80});
+	CameraTras.set_rotation(glm::angleAxis(-0.1f, glm::fvec3{1,0,0}));
 	auto scene = std::make_shared<Scene>();
-	auto camera = std::make_shared<Camera>(Transform{{0,0,80},{},{1.0f,0.0f,0.0f,0.0f}},0.001,100,90,1);
+	auto camera = std::make_shared<Camera>(CameraTras,0.001,100,90,1);
 
 	scene->register_Camera(camera);
 	scene->SetCurrentCammera(camera->getID());
@@ -25,16 +28,18 @@ int main()
 
 	// Setup Floor
 	glm::fvec3 floor_extends = {100,0.1f,100};
-	auto floor =std::make_shared<Box>(Transform{{0,-0.1,0},{1,1,1},(glm::angleAxis(-0.001f,glm::fvec3{1,0,0}))},glm::fvec4{1,1,1,1},floor_extends);
+	Transform floor_t =  {};
+	floor_t.set_translation({0,0,0});
+	auto floor =std::make_shared<Box>(floor_t,glm::fvec4{1,1,1,1},floor_extends);
 	auto floorcollison = std::make_shared<CBox>(floor->getTransfrom(), floor_extends);
-	props.mass_inv = Mass(0);
-	props.tensor_inv = InteriaTensor();
+	props.mass = Mass(inf);
+	props.tensor = InteriaTensor(inf,inf,inf);
 
 	state.postion_state.pos = floor->get_translation();
 	state.postion_state.rot  = floor->get_rotation();
 	state.angualr_velocity = {0,0,0};
 	state.linear_velocity = {0,0,0};	
-	auto  floorbody = std::make_shared<Body>(BodyMode::RIGID,props,state,floor);
+	auto  floorbody = std::make_shared<Body>(BodyMode::STATIC,props,state,floor);
 	floorbody->SetCollison(floorcollison);
 	scene->register_VissualObject(floor);
 	scene->register_PhyiscObject(floorbody);
@@ -48,13 +53,13 @@ int main()
 	box_t.set_translation({0,20,0});
 	auto box =std::make_shared<Box>(box_t,glm::fvec4{0,1,0,1},box_ext);
 	auto boxCollison = std::make_shared<CBox>(box->getTransfrom(), box_ext);
-	props.mass_inv = Mass(0);
-	props.tensor_inv = InteriaTensor();
+	props.mass = Mass(30);
+	props.tensor = InteriaTensor(20,20,20);
 
 	state.postion_state.pos = box->get_translation() + glm::fvec3(20,20,20);
 	state.postion_state.rot  = box->get_rotation();
 	state.angualr_velocity = {0,0,0};
-	state.linear_velocity = {0,-0.5,0};
+	state.linear_velocity = {0,-2.5,0};
 	
 	auto  boxbody = std::make_shared<Body>(BodyMode::RIGID,props,state,box);
 	boxbody->SetCollison(boxCollison);
@@ -70,8 +75,8 @@ int main()
 
 	
 
-	props.mass_inv = Mass{0};
-	props.tensor_inv = InteriaTensor{};
+	props.mass = Mass{0};
+	props.tensor = InteriaTensor{};
 	BodyState bodyState = {};
 	
 

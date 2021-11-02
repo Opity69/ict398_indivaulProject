@@ -25,8 +25,8 @@ struct PostionState
 
 struct BodyProps
 {
-	Mass mass_inv {1.0f};
-	InteriaTensor tensor_inv;
+	Mass mass {1.0f};
+	InteriaTensor tensor;
 };
 
 struct BodyState
@@ -43,6 +43,13 @@ struct BodyState
 };
 
 
+float ComputeLamda(const BodyState& s1, const BodyProps& p1, const BodyState& s2, const BodyProps& p2,
+                   const Contact& c);
+
+
+void ImpluseApply(const Scalar_t& impluse, BodyState& state, const BodyProps& props, const Contact& c);
+
+
 struct Body
 {
 	Body(BodyMode mode, const BodyProps& props, const BodyState& state, const std::weak_ptr<TransFormable>& object)
@@ -53,6 +60,20 @@ struct Body
 	{
 	}
 
+	void setState(const BodyState& state)
+	{
+		this->state = state;
+	}
+
+	BodyState& ModiftyState()
+	{
+		return  this->state;
+	}
+
+	BodyState getState() const
+	{
+		return  state;
+	}
 
 
 	
@@ -104,11 +125,36 @@ struct Body
 
 	void Exchange(Body& other, const Contact& c)
 	{
-		state.linear_velocity.SetValue(state.linear_velocity.Value()*-1.0f);
-		state.angualr_velocity.SetValue(state.angualr_velocity.Value()*-1.0f);
+		float fudge = 0.2f;
 
-		other.state.linear_velocity.SetValue(other.state.linear_velocity.Value()*-1.0f);
-		other.state.angualr_velocity.SetValue(other.state.angualr_velocity.Value()*-1.0f);
+
+
+		float impluse = ComputeLamda(this->getState(),this->props,other.getState(),other.props,c);
+		// Exchange
+
+		if(mode != BodyMode::STATIC )
+		{
+			ImpluseApply(impluse,this->ModiftyState(),this->props,c);
+		}
+		
+		
+		if(other.mode != BodyMode::STATIC)
+		{
+			ImpluseApply(-impluse,other.ModiftyState(),other.props,c);
+		}
+
+		if(mode != BodyMode::STATIC)
+		{
+			this->state.postion_state.pos +=  -c.norm * (c.depth + fudge);
+		}else
+		{
+			if(other.mode !=BodyMode::STATIC)
+			{
+				other.state.postion_state.pos +=  c.norm * (c.depth + fudge) ;
+			}
+		}
+		
+		
 	}
 
 	void SetCollison(const std::shared_ptr<CollisonObject>& colision)
@@ -206,16 +252,18 @@ private:
 
 		for (int i = 0; i < bodies_.size(); ++i)
 		{
+			if(bodies_[i]->mode == BodyMode::STATIC)
+			{
+				continue;
+			}
 			bodies_[i]->IntergrateForce(TimeStep);
 			bodies_[i]->IntergrateVelocity(TimeStep);
-		}
-
-
-		for (int i = 0; i < bodies_.size(); ++i)
-		{
 			bodies_[i]->WriteBack();
 			bodies_[i]->CollisonSync();
 		}
+
+
+		
 	}
 
 public:
@@ -227,6 +275,8 @@ public:
 	void  AddBody(std::shared_ptr<Body>& body)
 	{
 		bodies_.push_back(body);
+		bodies_.back()->WriteBack();
+		bodies_.back()->CollisonSync();
 	}
 
 	void Update(float TimeStep)

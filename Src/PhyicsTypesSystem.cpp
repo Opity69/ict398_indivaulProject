@@ -10,6 +10,10 @@ LinearVelocity& LinearVelocity::operator+=(const LinearVelocity& integrate)
 	return  *this;
 }
 
+AngualrVelocity::AngualrVelocity(const glm::fvec3& vec) :Velocity(vec)
+{
+}
+
 LinearVelocity LinearAcceleration::Integrate(float timestep)
 {
 	return  LinearVelocity{this->Value() * timestep};
