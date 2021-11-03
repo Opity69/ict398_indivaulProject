@@ -50,18 +50,7 @@ void VecCopy(ccd_vec3_t* vec, const glm::fvec3& in);
 
 void QuatCopy(ccd_quat_t* quat, const glm::fquat& rot);
 
-std::string VecToString( const  glm::fvec3& vec)
-{
-	std::string out;
-	out +="v:";
-	for (int i = 0; i < 3; ++i)
-	{
-		out+=vec.x;
-		out+=",";
-	}
-	out +="\t";
-	return  out;
-}
+std::string VecToString(const glm::fvec3& vec);
 
 
 struct Contact
@@ -70,17 +59,7 @@ struct Contact
 	glm::fvec3 norm;
 	float depth;
 
-	std::string ToString() const
-	{
-		std::string out;
-		out += "Pos:";
-		out += VecToString(pos);
-		out +="\tnorm";
-		out += VecToString(norm);
-		out +="\tdepth";
-		out += depth;
-		return out;
-	}
+	std::string ToString() const;
 };
 
 bool InsectTest(const  CollisonObject& objA, const CollisonObject& objB, Contact& contact);
@@ -174,9 +153,10 @@ protected:
 	void Setup()
 	{
 		boxData.type = CCD_OBJ_BOX;
-		boxData.x = extends.x;
-		boxData.y = extends.y;
-		boxData.z = extends.z;
+		boxData.x = extends.x *2.0f;
+		boxData.y = extends.y *2.0f;
+		boxData.z = extends.z *2.0f;
+		//CheckSwap size
 
 		VecCopy(&boxData.pos,this->get_translation());
 		QuatCopy(&boxData.quat,this->get_rotation());

@@ -42,10 +42,10 @@ public:
 };
 
 
-class Shpere : public IVissualObject
+class Sphere : public IVissualObject
 {
 public:
-	Shpere(const Transform& transform, const glm::fvec4& color, float radius);
+	Sphere(const Transform& transform, const glm::fvec4& color, float radius);
 
 
 private:

@@ -12,6 +12,9 @@
 #include "UUID_Generator.hpp"
 
 
+static size_t Ticks = 0;
+
+
 enum class BodyMode
 {
 	RIGID,
@@ -24,6 +27,10 @@ struct PostionState
 	glm::fquat rot = {1, 0, 0, 0};
 };
 
+InteriaTensor computeTensorBox(const Mass& mass, const glm::fvec3& halfextends);
+
+InteriaTensor computeTensorSphere(const Mass& mass, Scalar_t radius);
+
 
 struct BodyProps
 {
@@ -33,26 +40,23 @@ struct BodyProps
 	std::string ToString() const
 	{
 		std::string out;
-		out += "Mass: ";
-		out += mass.GetValue();
-		out += "\t Mass_inv: ";
-		out += mass.getInv();
+		out += "\nMass: ";
+		out += std::to_string(mass.GetValue());
+		out += "\n 1/mass: ";
+		out += std::to_string(mass.getInv());
 
-		out += "\tTesnor: ";
+		out += "\nTesnor: ";
 		out += VecToString(tensor.getTensor());
-		out += "\t Tensor_inv: ";
+		out += "\n Tensor_inv: ";
 		out += VecToString(tensor.getInv());
 
 		return out;
-
-		
-		
 	}
 };
 
 struct BodyState
 {
-	PostionState postion_state = {};
+	PostionState postion_state = {{},{}};
 	LinearVelocity linear_velocity = {0, 0, 0};
 	AngualrVelocity angualr_velocity = {0, 0, 0};
 
@@ -61,6 +65,21 @@ struct BodyState
 
 	Toruge total_Torgue = {};
 	Force total_Force = {};
+
+
+	std::string ToString() const
+	{
+		std::string out;
+		out += "\nLinear Velocity: ";
+		out += VecToString(linear_velocity.Value());
+		out += "\nAngular Velocity: ";
+		out += VecToString(angualr_velocity.Value());
+		out += "\nPos: ";
+		out += VecToString(postion_state.pos);
+
+
+		return out;
+	}
 };
 
 
@@ -73,10 +92,9 @@ void ImpluseApply(const Scalar_t& impluse, BodyState& state, const BodyProps& pr
 
 struct Body
 {
-
-
-	std::string  tag= {"Empty"};
+	std::string tag = {"Empty"};
 	UUID id;
+
 	Body(BodyMode mode, const BodyProps& props, const BodyState& state, const std::weak_ptr<TransFormable>& object)
 		: mode(mode),
 		  props(props),
@@ -87,9 +105,9 @@ struct Body
 
 	UUID BodyID() const
 	{
-		return  id;
+		return id;
 	}
-	
+
 	void setState(const BodyState& state)
 	{
 		this->state = state;
@@ -107,8 +125,8 @@ struct Body
 
 
 	BodyMode mode = BodyMode::RIGID;
-	BodyProps props;
-	BodyState state;
+	BodyProps props = {};
+	BodyState state = {};
 
 	std::shared_ptr<CollisonObject> collison;
 
@@ -149,45 +167,62 @@ struct Body
 
 	void Exchange(Body& other, const Contact& c)
 	{
-		float fudge = 0.2f;
+		//float fudge = 0.001f; // push out of floor
 
-		std::cout << "Contact Between:" << this->tag << "::" << other.tag << "\tContact:" << c.ToString();
-		
-		
+		Contact c2 = c;
+		//c2.norm = c2.norm * -1.0f;
+		c2.norm =normalize(c2.norm);
 
-		float impluse = ComputeLamda(this->getState(), this->props, other.getState(), other.props, c);
+		std::cout << "\nContact Between:"  << this->tag << "::" << other.tag <<"  Tick" << std::to_string(Ticks) << "\n\n"
+			<< "Contact:" << c2.ToString() << "\n"
+			<< "\n" << this->tag << " state:\n" << this->state.ToString() << "\n" << this->props.ToString() << "\n\n"
+			<< "\n" << other.tag << " state:\n" << other.state.ToString() << "\n\n" << other.props.ToString() << "\n\n";
+
+
+		float impluse = ComputeLamda(this->getState(), this->props, other.getState(), other.props, c2);
 		// Exchange
 
-		if (mode != BodyMode::STATIC)
+
+		float wieghtA = 0.5, wieghtB = 0.5;
+
+
+		if (this->mode == BodyMode::STATIC)
 		{
-			ImpluseApply(impluse, this->ModiftyState(), this->props, c);
+			wieghtA = 0;
+			wieghtB = 1;
+		}
+
+		if (other.mode == BodyMode::STATIC)
+		{
+			wieghtB = 0;
+			wieghtA = 1;
+		}
+
+
+		if (c.norm.x == 0 && c.norm.y == 0 && c.norm.z == 0)
+		{
+			__debugbreak();
+		}
+
+
+		if (this->mode != BodyMode::STATIC)
+		{
+			ImpluseApply(impluse, this->ModiftyState(), this->props, c2);
 		}
 
 
 		if (other.mode != BodyMode::STATIC)
 		{
-			ImpluseApply(-impluse, other.ModiftyState(), other.props, c);
+			ImpluseApply(-impluse, other.ModiftyState(), other.props, c2);
 		}
 
-		float wieghtA = 0.5, wieghtB = 0.5;
+		this->state.postion_state.pos += c2.norm * wieghtA * (-c2.depth );
 
+		other.state.postion_state.pos += c2.norm * wieghtB * (c2.depth );
+		
 
-		if(this->mode == BodyMode::STATIC)
-		{
-			wieghtA =0;
-			wieghtB =1;
-		}else
-		{
-			if(other.mode == BodyMode::STATIC)
-			{
-				wieghtB = 0;
-				wieghtA = 1;
-			}
-		}
-
-		this->state.postion_state.pos += -c.norm * wieghtA * (c.depth + fudge);
-
-		other.state.postion_state.pos += c.norm * wieghtB * (c.depth + fudge);
+		this->CollisonSync();
+		other.CollisonSync();
 	}
 
 	void SetCollison(const std::shared_ptr<CollisonObject>& colision)
@@ -237,8 +272,10 @@ struct BodyPair
 	std::shared_ptr<Body> A;
 	std::shared_ptr<Body> B;
 
+
 	void Solve()
 	{
+		contact.norm = normalize(contact.norm);
 		if (A && B)
 		{
 			A->Exchange(*B.get(), contact);
@@ -249,6 +286,7 @@ struct BodyPair
 
 class PhyicsWorld
 {
+	unsigned interationCount = 20;
 	std::vector<std::shared_ptr<Body>> bodies_;
 	std::vector<BodyPair> pairs_;
 
@@ -291,6 +329,8 @@ private:
 			bodies_[i]->WriteBack();
 			bodies_[i]->CollisonSync();
 		}
+
+		Ticks++;
 	}
 
 public:
@@ -308,6 +348,11 @@ public:
 
 	void Update(float TimeStep)
 	{
-		SubStep(TimeStep);
+		float step = TimeStep / (float) interationCount;
+		for (size_t i = 0; i < interationCount; ++i)
+		{
+			SubStep(step);
+		}
+		
 	}
 };

@@ -54,7 +54,7 @@ void Camera::set_aspect(const float aspect)
 	
 	this->aspect = aspect;
 
-	if(aspect < 0.01 | isfinite(aspect))
+	if(aspect < 0.01f || isfinite(aspect))
 	{
 		this->aspect =1;
 	}
@@ -74,7 +74,7 @@ void Camera::ReCompute()
 		{
 			aspect =1;
 		}
-		glm::fmat4 pro = glm::perspective<float>(fov, aspect, near, far);
+		glm::fmat4 pro = glm::perspective<float>(glm::radians(fov), aspect, near, far);
 
 		auto forward = this->localForward();
 		auto eye = this->get_translation();

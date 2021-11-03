@@ -1,0 +1,267 @@
+Current Bullet Fire With:v:0.707107,-0.707107,0.000000,	
+Current Bullet Fire With:v:0.707107,-0.707107,0.000000,	
+Current Bullet Fire With:v:0.707107,-0.707107,0.000000,	
+Current Bullet Fire With:v:0.707107,-0.707107,0.000000,	
+Current Bullet vel:v:0.707107,-0.707107,0.000000,	
+Current Bullet vel:v:0.707107,-0.707107,0.000000,	
+Current Bullet vel:v:0.777818,-0.777818,0.000000,	
+Current Bullet vel:v:0.848528,-0.848528,0.000000,	
+Current Bullet vel:v:0.919239,-0.919239,0.000000,	
+Current Bullet vel:v:0.989950,-0.989950,0.000000,	
+Current Bullet vel:v:1.060660,-1.060660,0.000000,	
+Current Bullet vel:v:1.131371,-1.131371,0.000000,	
+Current Bullet vel:v:1.202082,-1.202082,0.000000,	
+Current Bullet vel:v:1.272792,-1.272792,0.000000,	
+Current Bullet vel:v:1.343503,-1.343503,0.000000,	
+Current Bullet vel:v:1.414214,-1.414214,0.000000,	
+Current Bullet vel:v:1.484924,-1.484924,0.000000,	
+Current Bullet vel:v:1.555635,-1.555635,0.000000,	
+Current Bullet vel:v:1.626346,-1.626346,0.000000,	
+Current Bullet vel:v:1.697056,-1.697056,0.000000,	
+Current Bullet vel:v:1.767767,-1.767767,0.000000,	
+Current Bullet vel:v:1.838477,-1.838477,0.000000,	
+Current Bullet vel:v:1.909188,-1.909188,0.000000,	
+Current Bullet vel:v:1.979899,-1.979899,0.000000,	
+Current Bullet vel:v:2.050609,-2.050609,0.000000,	
+Current Bullet vel:v:2.121320,-2.121320,0.000000,	
+Current Bullet vel:v:2.192031,-2.192031,0.000000,	
+Current Bullet vel:v:2.262741,-2.262741,0.000000,	
+Current Bullet vel:v:2.333452,-2.333452,0.000000,	
+Current Bullet vel:v:2.404162,-2.404162,0.000000,	
+Current Bullet vel:v:2.474873,-2.474873,0.000000,	
+Current Bullet vel:v:2.545584,-2.545584,0.000000,	
+Current Bullet vel:v:2.616294,-2.616294,0.000000,	
+Current Bullet vel:v:2.687005,-2.687005,0.000000,	
+Current Bullet vel:v:2.757715,-2.757715,0.000000,	
+Current Bullet vel:v:2.828426,-2.828426,0.000000,	
+Current Bullet vel:v:2.899137,-2.899137,0.000000,	
+Current Bullet vel:v:2.969847,-2.969847,0.000000,	
+Current Bullet vel:v:3.040558,-3.040558,0.000000,	
+Current Bullet vel:v:3.111269,-3.111269,0.000000,	
+Current Bullet vel:v:3.111269,-3.111269,0.000000,	
+Current Bullet Fire With:v:3.111269,-3.111269,0.000000,	
+Current Bullet Fire With:v:3.111269,-3.111269,0.000000,	
+
+Contact Between:floor::Bullet  Tick13677
+
+Contact:
+Pos: v:-11.982971,-19.999825,0.000000,	
+norm: v:0.000000,1.000000,0.000000,	
+depth: 0.000086
+
+floor state:
+
+Linear Velocity: v:0.000000,0.000000,0.000000,	
+Angular Velocity: v:0.000000,0.000000,0.000000,	
+Pos: v:0.000000,-30.000000,0.000000,	
+
+Mass: inf
+ 1/mass: 0.000010
+Tesnor: v:inf,inf,inf,	
+ Tensor_inv: v:0.000100,0.000100,0.000100,	
+
+
+Bullet state:
+
+Linear Velocity: v:3.111269,-3.111269,0.000000,	
+Angular Velocity: v:0.000000,0.000000,0.000000,	
+Pos: v:-3.999916,-16.000086,0.000000,	
+
+
+Mass: 0.100000
+ 1/mass: 10.000000
+Tesnor: v:0.640000,0.640000,0.640000,	
+ Tensor_inv: v:1.562500,1.562500,1.562500,	
+
+
+Contact Between:floor::Bullet  Tick13678
+
+Contact:
+Pos: v:-30.987114,-19.207554,0.000000,	
+norm: v:0.719844,-0.694136,0.000000,	
+depth: 0.000005
+
+floor state:
+
+Linear Velocity: v:0.000000,0.000000,0.000000,	
+Angular Velocity: v:0.000000,0.000000,0.000000,	
+Pos: v:0.000000,-30.000000,0.000000,	
+
+Mass: inf
+ 1/mass: 0.000010
+Tesnor: v:inf,inf,inf,	
+ Tensor_inv: v:0.000100,0.000100,0.000100,	
+
+
+Bullet state:
+
+Linear Velocity: v:3.111269,-2.543473,0.000000,	
+Angular Velocity: v:0.000000,0.000000,-12.473523,	
+Pos: v:-3.984360,-16.012718,0.000000,	
+
+
+Mass: 0.100000
+ 1/mass: 10.000000
+Tesnor: v:0.640000,0.640000,0.640000,	
+ Tensor_inv: v:1.562500,1.562500,1.562500,	
+
+
+Contact Between:floor::Bullet  Tick13679
+
+Contact:
+Pos: v:-9.010646,-20.374117,-7.000000,	
+norm: v:0.000000,1.000000,0.000000,	
+depth: 0.043683
+
+floor state:
+
+Linear Velocity: v:0.000000,0.000000,0.000000,	
+Angular Velocity: v:0.000000,0.000000,0.000000,	
+Pos: v:0.000000,-30.000000,0.000000,	
+
+Mass: inf
+ 1/mass: 0.000010
+Tesnor: v:inf,inf,inf,	
+ Tensor_inv: v:0.000100,0.000100,0.000100,	
+
+
+Bullet state:
+
+Linear Velocity: v:8.412802,-7.655665,0.000000,	
+Angular Velocity: v:0.000000,0.000000,23.693701,	
+Pos: v:-3.942292,-16.051001,0.000000,	
+
+
+Mass: 0.100000
+ 1/mass: 10.000000
+Tesnor: v:0.640000,0.640000,0.640000,	
+ Tensor_inv: v:1.562500,1.562500,1.562500,	
+
+
+Contact Between:Target1::Bullet  Tick13840
+
+Contact:
+Pos: v:2.106328,-2.017809,0.000000,	
+norm: v:0.001081,-0.999999,0.000000,	
+depth: 0.054271
+
+Target1 state:
+
+Linear Velocity: v:0.000000,0.000000,0.000000,	
+Angular Velocity: v:0.000000,0.000000,0.000000,	
+Pos: v:0.000000,1.000000,0.000000,	
+
+Mass: 6.000000
+ 1/mass: 0.166667
+Tesnor: v:218.000000,36.000000,218.000000,	
+ Tensor_inv: v:0.004587,0.027778,0.004587,	
+
+
+Bullet state:
+
+Linear Velocity: v:8.412802,12.506965,0.000000,	
+Angular Velocity: v:10.937499,0.000000,39.853432,	
+Pos: v:2.830007,-5.939151,0.000000,	
+
+
+Mass: 0.100000
+ 1/mass: 10.000000
+Tesnor: v:0.640000,0.640000,0.640000,	
+ Tensor_inv: v:1.562500,1.562500,1.562500,	
+
+
+Contact Between:Target1::Bullet  Tick13841
+
+Contact:
+Pos: v:2.128576,-1.913948,-0.000000,	
+norm: v:0.001063,-1.000000,0.000000,	
+depth: 0.212111
+
+Target1 state:
+
+Linear Velocity: v:0.000530,-0.490322,0.000000,	
+Angular Velocity: v:0.000000,0.000000,-0.009647,	
+Pos: v:-0.000027,1.024684,0.000000,	
+
+Mass: 6.000000
+ 1/mass: 0.166667
+Tesnor: v:218.000000,36.000000,218.000000,	
+ Tensor_inv: v:0.004587,0.027778,0.004587,	
+
+
+Bullet state:
+
+Linear Velocity: v:8.381008,41.926292,0.000000,	
+Angular Velocity: v:-32.177406,0.000000,-116.122063,	
+Pos: v:2.871941,-5.756655,0.000000,	
+
+
+Mass: 0.100000
+ 1/mass: 10.000000
+Tesnor: v:0.640000,0.640000,0.640000,	
+ Tensor_inv: v:1.562500,1.562500,1.562500,	
+
+
+Contact Between:floor::Bullet  Tick13852
+
+Contact:
+Pos: v:-3.960382,-21.054441,0.000000,	
+norm: v:0.000116,1.000000,0.000000,	
+depth: 0.328025
+
+floor state:
+
+Linear Velocity: v:0.000000,0.000000,0.000000,	
+Angular Velocity: v:0.000000,0.000000,0.000000,	
+Pos: v:0.000000,-30.000000,0.000000,	
+
+Mass: inf
+ 1/mass: 0.000010
+Tesnor: v:inf,inf,inf,	
+ Tensor_inv: v:0.000100,0.000100,0.000100,	
+
+
+Bullet state:
+
+Linear Velocity: v:8.628077,-190.427032,0.000000,	
+Angular Velocity: v:-747.653076,0.000000,-2696.980957,	
+Pos: v:3.346598,-16.336197,0.000000,	
+
+
+Mass: 0.100000
+ 1/mass: 10.000000
+Tesnor: v:0.640000,0.640000,0.640000,	
+ Tensor_inv: v:1.562500,1.562500,1.562500,	
+
+
+Contact Between:floor::Bullet  Tick13853
+
+Contact:
+Pos: v:1.369650,-34.425659,0.000000,	
+norm: v:0.000098,-1.000000,0.000000,	
+depth: 6.141126
+
+floor state:
+
+Linear Velocity: v:0.000000,0.000000,0.000000,	
+Angular Velocity: v:0.000000,0.000000,0.000000,	
+Pos: v:0.000000,-30.000000,0.000000,	
+
+Mass: inf
+ 1/mass: 0.000010
+Tesnor: v:inf,inf,inf,	
+ Tensor_inv: v:0.000100,0.000100,0.000100,	
+
+
+Bullet state:
+
+Linear Velocity: v:8.142187,-4368.576660,0.000000,	
+Angular Velocity: v:312380.656250,-0.000000,1126827.625000,	
+Pos: v:3.387347,-37.851055,0.000000,	
+
+
+Mass: 0.100000
+ 1/mass: 10.000000
+Tesnor: v:0.640000,0.640000,0.640000,	
+ Tensor_inv: v:1.562500,1.562500,1.562500,	
+

@@ -47,13 +47,13 @@ glm::fvec4 IVissualObject::GetColor()
 	return color_;
 }
 
-Shpere::Shpere(const Transform& transform, const glm::fvec4& color, float radius): IVissualObject(transform, color),
+Sphere::Sphere(const Transform& transform, const glm::fvec4& color, float radius): IVissualObject(transform, color),
 	radius(radius), obj_(gluNewQuadric())
 {
 }
 
 
-void Shpere::Rebuild()
+void Sphere::Rebuild()
 {
 	glNewList(drawList,GL_COMPILE);
 	glColor4fv(glm::value_ptr(color_));
@@ -61,7 +61,7 @@ void Shpere::Rebuild()
 	glEndList();
 }
 
-void Shpere::DrawSetup()
+void Sphere::DrawSetup()
 {
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
@@ -70,7 +70,7 @@ void Shpere::DrawSetup()
 	glLoadMatrixf(t.getMatrixPtr());
 }
 
-void Shpere::DrawTearDown()
+void Sphere::DrawTearDown()
 {
 	glPopMatrix();
 }

@@ -17,6 +17,31 @@ void QuatCopy(ccd_quat_t* quat, const glm::fquat& rot)
 	quat->q[3] = rot[0];
 }
 
+std::string VecToString(const glm::fvec3& vec)
+{
+	std::string out;
+	out += "v:";
+	for (int i = 0; i < 3; ++i)
+	{
+		out += std::to_string(vec[i]);
+		out += ",";
+	}
+	out += "\t";
+	return out;
+}
+
+std::string Contact::ToString() const
+{
+	std::string out;
+	out += "\nPos: ";
+	out += VecToString(pos);
+	out += "\nnorm: ";
+	out += VecToString(norm);
+	out += "\ndepth: ";
+	out += std::to_string(depth);
+	return out;
+}
+
 bool InsectTest(const CollisonObject& objA, const CollisonObject& objB, Contact& contact)
 {
 	ccd_t ccd;
@@ -59,12 +84,16 @@ bool InsectTest(const CollisonObject& objA, const CollisonObject& objB, Contact&
 	
 	int intersect = ccdGJKPenetration(objA.getBaseType(), objB.getBaseType(), &ccd2, &depth, &dir, &pos);
 
-
+	if(intersect != 0)
+	{
+		return false;
+	}
 
 	
 	contact.depth = depth;
 	contact.norm = {dir.v[0], dir.v[1], dir.v[2]};
 	contact.pos = {pos.v[0], pos.v[1], pos.v[2]};
+	contact.norm = contact.norm * 1.0f;
 
 	for (int i = 0; i < 3; ++i)
 	{
@@ -72,6 +101,7 @@ bool InsectTest(const CollisonObject& objA, const CollisonObject& objB, Contact&
 		if(isinf(val) || isnan(val))
 		{
 			contact.norm = {0,1,0};
+			__debugbreak();
 		}
 	}
 	

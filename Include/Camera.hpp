@@ -21,10 +21,10 @@ public:
 private:
 	UUID id;
 
-	float near = 0.01;
-	float far = 1000;
-	float fov = 90;
-	float aspect = 10;
+	float near = 0.01f;
+	float far = 1000.f;
+	float fov = 90.f;
+	float aspect = 10.f;
 
 
 	mutable glm::fmat4 ViewProjectionMatrix_Cache = {};

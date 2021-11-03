@@ -39,6 +39,11 @@ public:
 	void SetSceneToDraw(const std::shared_ptr<Scene>& scene);
 	glm::uvec2 GetFsize();
 	void Update(float x);
+
+	GLFWwindow* getWinptr()
+	{
+		return  win_ptr;
+	}
 };
 
 class VissaulEngine

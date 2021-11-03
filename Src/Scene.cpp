@@ -1,10 +1,27 @@
 #include "Scene.hpp"
 
 
+#include <fstream>
 #include <sstream>
 #include <string>
 
 #include "Glew/include/GL/glew.h"
+
+
+float FloatorZero(const std::string& s)
+{
+	if (s.empty())
+	{
+		return 0;
+	}
+
+	return std::stof(s);
+}
+
+bool ProjectileData::is_fired() const
+{
+	return fired;
+}
 
 
 void Scene::register_Camera(std::shared_ptr<Camera>& camera)
@@ -15,6 +32,70 @@ void Scene::register_Camera(std::shared_ptr<Camera>& camera)
 void Scene::unregister_Camera(uint64_t id)
 {
 	cameras_.erase(id);
+}
+
+void Scene::loadFromTokens(std::vector<std::string>& tokens)
+{
+	BodyProps p;
+	BodyState s;
+	size_t index = 0;
+	std::string tag = tokens[index++];
+	std::string Type = tokens[index++];
+	float posX = std::stof(tokens[index++]);
+	float posy = std::stof(tokens[index++]);
+	float posz = std::stof(tokens[index++]);
+
+	float p1 = std::stof(tokens[index++]);
+	float p2 = std::stof(tokens[index++]);
+	float p3 = std::stof(tokens[index++]);
+
+	float mass = std::stof(tokens[index++]);
+
+	float r = std::stof(tokens[index++]);
+	float g = std::stof(tokens[index++]);
+	float b = std::stof(tokens[index++]);
+
+
+	Transform trans = {};
+	trans.set_translation({posX, posy, posz});
+	glm::fvec4 color{r, g, b, 1};
+
+	glm::fvec3 params = {p1, p2, p3};
+	p.mass = Mass{mass};
+
+	if (Type == "Box")
+	{
+		auto box = std::make_shared<Box>(trans, color, params);
+		auto box_collison = std::make_shared<CBox>(trans, params);
+		p.tensor = computeTensorBox(p.mass, params);
+		s.postion_state.pos = box->get_translation();
+		auto boxBody = std::make_shared<Body>(BodyMode::RIGID, p, s, box);
+		boxBody->SetCollison(box_collison);
+		boxBody->tag = tag;
+		this->register_VissualObject(box);
+		this->register_PhyiscObject(boxBody);
+		if (tag == "Bullet")
+		{
+			this->projectile_data = {boxBody};
+		}
+	}
+	else if (Type == "Sphere")
+	{
+		auto sphere = std::make_shared<Sphere>(trans, color, params.x);
+		auto sphere_collison = std::make_shared<CSphere>(trans, params.x);
+		p.tensor = computeTensorSphere(p.mass, params.x);
+		s.postion_state.pos = sphere->get_translation();
+		auto sphereBody = std::make_shared<Body>(BodyMode::RIGID, p, s, sphere);
+		sphereBody->SetCollison(sphere_collison);
+		sphereBody->tag = tag;
+		this->register_VissualObject(sphere);
+		this->register_PhyiscObject(sphereBody);
+
+		if (tag == "Bullet")
+		{
+			this->projectile_data = {sphereBody};
+		}
+	}
 }
 
 void Scene::SetCurrentCammera(uint64_t id)
@@ -64,23 +145,30 @@ std::vector<std::string> getNextLineAndSplitIntoTokens(std::istream& str)
 }
 
 
-void Scene::LoadBodies(const std::string& file_Path)
+void Scene::LoadCsv(const std::string& file_Path)
 {
-	// Look operation map
-	auto Operation = 0u;
+	std::ifstream fstream(file_Path);
 
-	switch (Operation)
+	if (!fstream.is_open())
 	{
-	case 1:
-		// Addvssual
-		break;
-	case 2:
-		// AddBody
-		break;
+		std::cout << "File not Found";
+	}
+	std::string line;
+	//skip header line
+	std::getline(fstream, line);
+	std::vector<std::string> Tokens;
+	while (std::getline(fstream, line))
+	{
+		std::stringstream stringstream(line);
 
-		
-	default: ;
-		
+
+		Tokens.clear();
+		std::string token;
+		while (std::getline(stringstream, token, ','))
+		{
+			Tokens.push_back(token);
+		}
+		this->loadFromTokens(Tokens);
 	}
 }
 
@@ -112,6 +200,24 @@ void Scene::Draw()
 		if (elm)
 		{
 			elm->Draw();
+		}
+	}
+
+	if (!projectile_data.projectile.expired())
+	{
+		auto ptr = projectile_data.projectile.lock();
+		if (ptr)
+		{
+			if (!projectile_data.is_fired())
+			{
+				glBegin(GL_LINES);
+					glColor4f(1, 1, 0, 1);
+					glVertex3fv(glm::value_ptr(ptr->state.postion_state.pos));
+					glm::fvec3 endpoint = ptr->state.postion_state.pos + projectile_data.dir * projectile_data.scale;
+					glVertex3fv(glm::value_ptr(endpoint));
+				glEnd();
+			}
+			
 		}
 	}
 

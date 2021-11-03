@@ -10,7 +10,7 @@ typedef float Scalar_t;
 class VectorType
 {
 protected:
-	Vector_t value_;
+	Vector_t value_ = {};
 
 public:
 	void SetValue(const Vector_t& value)
@@ -105,12 +105,12 @@ public:
 
 		if(fabs(value_) <0.001)
 		{
-			value_ = 0.1;
+			value_ = 0.1f;
 		}
 
 		if(isinf(value_))
 		{
-			inv = 0;
+			inv = 0.00001f;
 			return;
 		}
 		inv = 1/this->value_;
@@ -120,9 +120,9 @@ public:
 
 class InteriaTensor
 {
-	glm::fvec3 tensor = {};
+	glm::fvec3 tensor = {1,1,1};
 
-	glm::fvec3 inv = {};
+	glm::fvec3 inv = {1,1,1};
 
 
 public:
@@ -160,7 +160,7 @@ public:
 		{
 			if(fabs(tensor[i]) < 0.001)
 			{
-				tensor[i] = 0.01;
+				tensor[i] = 0.01f;
 			}
 		}
 
@@ -171,7 +171,7 @@ public:
 		{
 			if(isinf(tensor[i]))
 			{
-				inv[i] = 0;
+				inv[i] = 0.0001f;
 			}
 		}
 
@@ -205,7 +205,7 @@ struct DeltaTime : public ScalarType
 
 class Postion
 {
-	Vector_t pos_;
+	Vector_t pos_ = {};
 
 
 public:
