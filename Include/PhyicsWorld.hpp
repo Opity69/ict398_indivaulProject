@@ -8,6 +8,7 @@
 #include  <glm3/glm/gtc/quaternion.hpp>
 #include "CollisonObject.hpp"
 #include <unordered_map>
+#include <deque>
 
 #include "UUID_Generator.hpp"
 
@@ -31,32 +32,24 @@ InteriaTensor computeTensorBox(const Mass& mass, const glm::fvec3& halfextends);
 
 InteriaTensor computeTensorSphere(const Mass& mass, Scalar_t radius);
 
+struct DebugContactPoint
+{
+	glm::fvec3 point;
+	glm::fvec3 norm;
+};
+
 
 struct BodyProps
 {
 	Mass mass{1.0f};
 	InteriaTensor tensor = {1, 1, 1};
 
-	std::string ToString() const
-	{
-		std::string out;
-		out += "\nMass: ";
-		out += std::to_string(mass.GetValue());
-		out += "\n 1/mass: ";
-		out += std::to_string(mass.getInv());
-
-		out += "\nTesnor: ";
-		out += VecToString(tensor.getTensor());
-		out += "\n Tensor_inv: ";
-		out += VecToString(tensor.getInv());
-
-		return out;
-	}
+	std::string ToString() const;
 };
 
 struct BodyState
 {
-	PostionState postion_state = {{},{}};
+	PostionState postion_state = {{}, {1,0,0,0}};
 	LinearVelocity linear_velocity = {0, 0, 0};
 	AngualrVelocity angualr_velocity = {0, 0, 0};
 
@@ -67,19 +60,7 @@ struct BodyState
 	Force total_Force = {};
 
 
-	std::string ToString() const
-	{
-		std::string out;
-		out += "\nLinear Velocity: ";
-		out += VecToString(linear_velocity.Value());
-		out += "\nAngular Velocity: ";
-		out += VecToString(angualr_velocity.Value());
-		out += "\nPos: ";
-		out += VecToString(postion_state.pos);
-
-
-		return out;
-	}
+	std::string ToString() const;
 };
 
 
@@ -157,23 +138,30 @@ struct Body
 		auto angle = state.angualr_velocity.Lenght();
 
 		angle *= timestep;
-		if (fabs(angle) > 0.0 && !isinf(angle))
-		{
-			glm::fquat q = glm::angleAxis(angle, axis);
 
-			state.postion_state.rot = q * state.postion_state.rot;
+
+		if(fabs(angle) > 0.0)
+		{
+			glm::fquat q = glm::angleAxis(angle , axis);
+			q = normalize(q);
+			state.postion_state.rot = q *state.postion_state.rot;
 		}
+		
+
+		;
 	};
 
 	void Exchange(Body& other, const Contact& c)
 	{
-		//float fudge = 0.001f; // push out of floor
+		float fudge = 0.001f; // push out of floor
 
 		Contact c2 = c;
-		//c2.norm = c2.norm * -1.0f;
-		c2.norm =normalize(c2.norm);
+		//c2.norm =c2.norm * -1.0f;
+		c2.norm = normalize(c2.norm);
 
-		std::cout << "\nContact Between:"  << this->tag << "::" << other.tag <<"  Tick" << std::to_string(Ticks) << "\n\n"
+
+		std::cout << "\nContact Between:" << this->tag << "::" << other.tag << "  Tick" << std::to_string(Ticks) <<
+			"\n\n"
 			<< "Contact:" << c2.ToString() << "\n"
 			<< "\n" << this->tag << " state:\n" << this->state.ToString() << "\n" << this->props.ToString() << "\n\n"
 			<< "\n" << other.tag << " state:\n" << other.state.ToString() << "\n\n" << other.props.ToString() << "\n\n";
@@ -199,7 +187,7 @@ struct Body
 		}
 
 
-		if (c.norm.x == 0 && c.norm.y == 0 && c.norm.z == 0)
+		if (c2.norm.x == 0 && c2.norm.y == 0 && c2.norm.z == 0)
 		{
 			__debugbreak();
 		}
@@ -216,10 +204,10 @@ struct Body
 			ImpluseApply(-impluse, other.ModiftyState(), other.props, c2);
 		}
 
-		this->state.postion_state.pos += c2.norm * wieghtA * (-c2.depth );
+		this->state.postion_state.pos += c2.norm * wieghtA * (-c2.depth + fudge);
 
-		other.state.postion_state.pos += c2.norm * wieghtB * (c2.depth );
-		
+		other.state.postion_state.pos += c2.norm * wieghtB * (c2.depth * fudge);
+
 
 		this->CollisonSync();
 		other.CollisonSync();
@@ -290,6 +278,23 @@ class PhyicsWorld
 	std::vector<std::shared_ptr<Body>> bodies_;
 	std::vector<BodyPair> pairs_;
 
+	std::deque<DebugContactPoint> debugContacts;
+
+public:
+	void addDebubug(DebugContactPoint b)
+	{
+		if (debugContacts.size() > 20)
+		{
+			debugContacts.pop_front();
+		}
+
+		debugContacts.push_back(b);
+	}
+
+	auto& GetDebugContacts() const
+	{
+		return debugContacts;
+	}
 
 private:
 	void SubStep(float TimeStep)
@@ -307,6 +312,7 @@ private:
 				{
 					if (bodies_[i]->GetCollison()->Intersect(*bodies_[k]->GetCollison(), c))
 					{
+						addDebubug({c.pos, c.norm});
 						pairs_.push_back(BodyPair{c, bodies_[i], bodies_[k]});
 					}
 				}
@@ -348,11 +354,10 @@ public:
 
 	void Update(float TimeStep)
 	{
-		float step = TimeStep / (float) interationCount;
+		float step = TimeStep / (float)interationCount;
 		for (size_t i = 0; i < interationCount; ++i)
 		{
 			SubStep(step);
 		}
-		
 	}
 };

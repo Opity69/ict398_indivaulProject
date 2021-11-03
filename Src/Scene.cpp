@@ -221,6 +221,24 @@ void Scene::Draw()
 		}
 	}
 
+	auto debugContacts = phyics_world_.GetDebugContacts();
+	for (auto& elm : debugContacts)
+	{
+
+		glBegin(GL_POINTS);
+		glPointSize(6);
+		glColor4f(1,0,0,1);
+		glVertex3fv(glm::value_ptr(elm.point));
+		
+		glEnd();
+		glBegin(GL_LINES);
+					glColor4f(1, 0, 1, 1);
+					glVertex3fv(glm::value_ptr(elm.point));
+					glm::fvec3 endpoint = elm.point + elm.norm * 4.0f;
+					glVertex3fv(glm::value_ptr(endpoint));
+				glEnd();
+	}
+
 
 	glPopMatrix();
 }

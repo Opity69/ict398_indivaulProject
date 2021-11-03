@@ -73,16 +73,17 @@ bool InsectTest(const CollisonObject& objA, const CollisonObject& objB, Contact&
 	// set up ccd_t struct
 	ccd2.support1 = ccdSupport; // support function for first object
 	ccd2.support2 = ccdSupport; // support function for second object
-	ccd2.max_iterations = 50; // maximal number of iterations
+	ccd2.max_iterations = 100; // maximal number of iterations
 	ccd2.epa_tolerance = 0.001; // maximal tolerance fro EPA part
 	ccd2.center1        = ccdObjCenter;  // center function for first object
       ccd2.center2        = ccdObjCenter;  // center function for second object
       ccd2.mpr_tolerance  = 0.0001;
 
+
 	  //TODO() figure out why this does work for this edge case
 	//int intersect = ccdGJKPenetration(objA.getBaseType(), objB.getBaseType(), &ccd2, &depth, &dir, &pos);
 	
-	int intersect = ccdGJKPenetration(objA.getBaseType(), objB.getBaseType(), &ccd2, &depth, &dir, &pos);
+	int intersect = ccdMPRPenetration(objA.getBaseType(), objB.getBaseType(), &ccd2, &depth, &dir, &pos);
 
 	if(intersect != 0)
 	{
@@ -101,8 +102,15 @@ bool InsectTest(const CollisonObject& objA, const CollisonObject& objB, Contact&
 		if(isinf(val) || isnan(val))
 		{
 			contact.norm = {0,1,0};
+			return false;
 			__debugbreak();
 		}
+	}
+
+	if(contact.norm.x ==0.0f && contact.norm.y ==0.0f && contact.norm.z ==0.0f)
+	{
+		//__debugbreak();
+		return false;
 	}
 	
 	return  intersect ==0;

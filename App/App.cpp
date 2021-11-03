@@ -10,6 +10,8 @@
 #include <Glfw/include/GLFW/glfw3.h>
 
 
+
+
 auto scene = std::make_shared<Scene>(); //   any other way would have taken for ages
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -174,8 +176,9 @@ int main()
 		BodyProps props = {};
 		BodyState state = {};
 		Transform CameraTras = {};
-		CameraTras.set_translation({0, 20, 80});
-		CameraTras.set_rotation(glm::angleAxis(-0.2f, glm::fvec3{1, 0, 0}));
+		CameraTras.set_translation({1, 30, 100});
+		CameraTras.set_rotation(glm::angleAxis(0.1f, glm::fvec3{0, 1, 0}));
+		CameraTras.Rotate(glm::angleAxis(-0.2f, glm::fvec3{1.0f,0,0}));
 
 		auto camera = std::make_shared<Camera>(CameraTras, 0.001, 1000, 90, 1);
 
@@ -184,9 +187,9 @@ int main()
 
 
 		// Setup Floor
-		glm::fvec3 floor_extends = {60, 10.f, 60};
+		glm::fvec3 floor_extends = {100, 10.f, 100};
 		Transform floor_t = {};
-		floor_t.set_translation({0, -30.0f, 0});
+		floor_t.set_translation({0, -20.0f, 0});
 		auto floor = std::make_shared<Box>(floor_t, glm::fvec4{1, 1, 1, 1}, floor_extends);
 		auto floorcollison = std::make_shared<CBox>(floor->getTransfrom(), floor_extends);
 		props.mass = Mass(inf);

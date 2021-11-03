@@ -134,6 +134,14 @@ void Box::DrawSetup()
 	Transform t = transform_;
 	t.Scale(halfExents);
 	glLoadMatrixf(t.getMatrixPtr()); // TODO() setup  transform;
+
+	glBegin(GL_LINES);
+		glColor4fv(glm::value_ptr(color_));
+		
+		glVertex3f(0,0,0);
+		
+		glVertex3f(1.1,1.1,1.1f);
+	glEnd();
 }
 
 void Box::DrawTearDown()

@@ -2,9 +2,9 @@
 
 InteriaTensor computeTensorBox(const Mass& mass, const glm::fvec3& halfextends)
 {
-	auto extends = halfextends * 2.f;
+	auto extends = halfextends * 2.0f;
 	
-	float div = 1/12.0f;
+	float div = 1.0/12.0f;
 	Scalar_t xx = div * mass.GetValue() *(extends.z *extends.z +  extends.x *extends.x);
 	Scalar_t yy = div * mass.GetValue() *(extends.y *extends.y +  extends.x *extends.x);
 	Scalar_t zz =  div * mass.GetValue() *(extends.z *extends.z +  extends.y *extends.y);
@@ -15,6 +15,36 @@ InteriaTensor computeTensorSphere(const Mass& mass ,Scalar_t radius)
 {
 	float val = 2.0f/5.0f * mass.GetValue() *(radius* radius);
 	return {val, val, val};
+}
+
+std::string BodyProps::ToString() const
+{
+	std::string out;
+	out += "\nMass: ";
+	out += std::to_string(mass.GetValue());
+	out += "\n 1/mass: ";
+	out += std::to_string(mass.getInv());
+
+	out += "\nTesnor: ";
+	out += VecToString(tensor.getTensor());
+	out += "\n Tensor_inv: ";
+	out += VecToString(tensor.getInv());
+
+	return out;
+}
+
+std::string BodyState::ToString() const
+{
+	std::string out;
+	out += "\nLinear Velocity: ";
+	out += VecToString(linear_velocity.Value());
+	out += "\nAngular Velocity: ";
+	out += VecToString(angualr_velocity.Value());
+	out += "\nPos: ";
+	out += VecToString(postion_state.pos);
+
+
+	return out;
 }
 
 float ComputeLamda(const BodyState& s1, const BodyProps& p1, const BodyState& s2, const BodyProps& p2, const Contact& c)
@@ -54,11 +84,12 @@ void ImpluseApply(const Scalar_t& impluse, BodyState& state, const BodyProps& pr
 
 	auto LamdaBig = impluse * c.norm;
 
-	lin_vel = LinearVelocity(lin_vel.Value() + (LamdaBig /props.mass.GetValue()));
+	
+	lin_vel = LinearVelocity(lin_vel.Value() + LamdaBig  * props.mass.getInv());
 
 
 	auto r =  c.pos -state.postion_state.pos; //TODO() fix  aussming center of mass in center for now
 	auto rxn = glm::cross(r, c.norm);
 
-	ang_vel = AngualrVelocity(impluse*ang_vel.Value() + props.tensor.getInv() * rxn);
+	ang_vel = AngualrVelocity(ang_vel.Value() + impluse*props.tensor.getInv() * rxn );
 }

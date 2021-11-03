@@ -102,7 +102,7 @@ public:
 	
 	void Setup()
 	{
-
+		
 		if(fabs(value_) <0.001)
 		{
 			value_ = 0.1f;
@@ -110,7 +110,7 @@ public:
 
 		if(isinf(value_))
 		{
-			inv = 0.00001f;
+			inv = 0.00000f;
 			return;
 		}
 		inv = 1/this->value_;
@@ -160,7 +160,7 @@ public:
 		{
 			if(fabs(tensor[i]) < 0.001)
 			{
-				tensor[i] = 0.01f;
+				tensor[i] = 0.00f;
 			}
 		}
 
@@ -174,6 +174,10 @@ public:
 				inv[i] = 0.0001f;
 			}
 		}
+
+		//TODO() fixed  tensor issue the is a hack
+		//inv = {10,10,10};
+		
 
 		
 	}
@@ -275,6 +279,32 @@ public:
 class AngualrVelocity : public Velocity
 {
 public:
+	AngualrVelocity(const AngualrVelocity& other)
+		: Velocity(other)
+	{
+	}
+
+	AngualrVelocity(AngualrVelocity&& other)
+		: Velocity(std::move(other))
+	{
+	}
+
+	AngualrVelocity& operator=(const AngualrVelocity& other)
+	{
+		if (this == &other)
+			return *this;
+		Velocity::operator =(other);
+		return *this;
+	}
+
+	AngualrVelocity& operator=(AngualrVelocity&& other)
+	{
+		if (this == &other)
+			return *this;
+		Velocity::operator =(std::move(other));
+		return *this;
+	}
+
 	AngualrVelocity(Scalar_t x, Scalar_t y, Scalar_t z): Velocity({x, y, z})
 	{
 	}
