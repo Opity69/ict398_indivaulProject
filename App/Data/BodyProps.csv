@@ -1,4 +1,4 @@
-﻿Tag,Type,posX,posY,posZ,p1,p2,p3,mass,R,G,B
-Target1,Box,0,20,0,1,10,15,10,0.5,0.5,1
-Target2,Box,20,10,2,0.3,3,0.3,3,1,0.5,0.7
+﻿Tag,Type,posX,posY,posZ,p1,p2,p3,mass,R,G,B,
+Target1,Box,0,20,0,1,10,15,3,0.5,0.5,1
+Target2,Box,20,10,2,3,3,3,3,1,0.5,0.7
 Bullet,Sphere,-50,30,0,4,4,4,0.1,0.7,0.7,0.7
