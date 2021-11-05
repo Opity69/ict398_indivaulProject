@@ -4,10 +4,11 @@ InteriaTensor computeTensorBox(const Mass& mass, const glm::fvec3& halfextends)
 {
 	auto extends = halfextends * 2.0f;
 	
-	float div = 1.0/12.0f;
-	Scalar_t xx = div * mass.GetValue() *(extends.z *extends.z +  extends.x *extends.x);
-	Scalar_t yy = div * mass.GetValue() *(extends.y *extends.y +  extends.x *extends.x);
-	Scalar_t zz =  div * mass.GetValue() *(extends.z *extends.z +  extends.y *extends.y);
+	float div = 1.0/12.0;
+	div *= mass.GetValue();
+	Scalar_t xx = div *((extends.z *extends.z) +  (extends.x *extends.x));
+	Scalar_t yy = div *((extends.y *extends.y) +  (extends.x *extends.x));
+	Scalar_t zz =  div *(((extends.z *extends.z) +  (extends.y *extends.y)));
 	return {xx, yy, zz};
 }
 
@@ -47,9 +48,9 @@ std::string BodyState::ToString() const
 	return out;
 }
 
-float ComputeLamda(const BodyState& s1, const BodyProps& p1, const BodyState& s2, const BodyProps& p2, const Contact& c)
+float ComputeLamda(const BodyState& s1, const BodyProps& p1, const BodyState& s2, const BodyProps& p2, const Contact& c ,float rest)
 {
-	float co_rest = 1;
+	float co_rest = rest;
 
 	float epart = -(1 + co_rest);
 	float linVelpart = dot(c.norm, (s1.linear_velocity.Value() - s2.linear_velocity.Value()));

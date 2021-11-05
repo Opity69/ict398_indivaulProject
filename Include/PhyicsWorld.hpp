@@ -65,7 +65,7 @@ struct BodyState
 
 
 float ComputeLamda(const BodyState& s1, const BodyProps& p1, const BodyState& s2, const BodyProps& p2,
-                   const Contact& c);
+                   const Contact& c ,float rest = 1);
 
 
 void ImpluseApply(const Scalar_t& impluse, BodyState& state, const BodyProps& props, const Contact& c);

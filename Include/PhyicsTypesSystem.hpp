@@ -103,10 +103,10 @@ public:
 	void Setup()
 	{
 		
-		if(fabs(value_) <0.001)
+		/*if(fabs(value_) <0.00001)
 		{
 			value_ = 0.1f;
-		}
+		}*/
 
 		if(isinf(value_))
 		{
@@ -165,7 +165,7 @@ public:
 		}
 
 		
-		inv =  {1.0/tensor.x, 1.0/tensor.y ,1.0/tensor.z};
+		inv =  {1.0f/tensor.x, 1.0f/tensor.y ,1.0f/tensor.z};
 
 		for (int i = 0; i < 3; ++i)
 		{
@@ -175,8 +175,7 @@ public:
 			}
 		}
 
-		//TODO() fixed  tensor issue the is a hack
-		//inv = {10,10,10};
+	
 		
 
 		
